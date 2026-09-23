@@ -1,0 +1,32 @@
+name: گزارش باگ
+description: خطا یا رفتار غیرمنتظره را گزارش کنید.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ممنون که باگ را گزارش می‌کنید. لطفاً اطلاعات زیر را کامل و دقیق بنویسید.
+  - type: textarea
+    id: description
+    attributes:
+      label: توضیح باگ
+      description: چه اتفاقی افتاد و انتظار داشتید چه اتفاقی بیفتد؟
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: مراحل بازتولید
+      description: قدم‌های لازم برای دیدن مشکل را بنویسید.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: اطلاعات تکمیلی
+      description: اسکرین‌شات، مرورگر، سیستم‌عامل یا هر جزئیات مفید دیگر.

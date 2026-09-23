@@ -1,0 +1,28 @@
+name: پیشنهاد قابلیت
+description: ایده یا قابلیت جدید پیشنهاد دهید.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        لطفاً ایده را شفاف و قابل بررسی توضیح دهید.
+  - type: textarea
+    id: problem
+    attributes:
+      label: مسئله یا نیاز
+      description: این قابلیت چه مشکلی را حل می‌کند؟
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: راهکار پیشنهادی
+      description: راهکار یا خروجی مورد انتظار را توضیح دهید.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: گزینه‌های جایگزین
+      description: اگر راهکار دیگری هم بررسی شده، اینجا بنویسید.
