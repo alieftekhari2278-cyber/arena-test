@@ -22,3 +22,17 @@ dist/
 build/
 coverage/
 .cache/
+
+# FlyWire connectome data (fetched by `python -m flybrain fetch`, never committed)
+data/raw/
+data/build/
+*.feather
+*.parquet
+*.csv.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
