@@ -28,3 +28,6 @@ data/
 *.npz
 *.parquet
 *.csv.gz
+
+# packaged release bundle (66 MB, rebuild with the command in RUN.md)
+*.zip

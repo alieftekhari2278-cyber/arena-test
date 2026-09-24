@@ -106,7 +106,19 @@ class FlyBrain:
 
     # ------------------------------------------------------------------ setup
     def load_graph(self, which):
-        gz = np.load(os.path.join(BUILD, f"graph_{'full' if which == 'full' else 't5'}.npz"))
+        which = "full" if which == "full" else "t5"
+        path = os.path.join(BUILD, f"graph_{which}.npz")
+        if not os.path.exists(path):
+            alt = "t5" if which == "full" else "full"
+            alt_path = os.path.join(BUILD, f"graph_{alt}.npz")
+            if not os.path.exists(alt_path):
+                raise SystemExit(
+                    f"no connectivity graph in {BUILD}.\n"
+                    "run:  bash flybrain/fetch_data.sh && python3 flybrain/build_graph.py")
+            print(f"  (graph_{which}.npz missing, falling back to graph_{alt}.npz; "
+                  f"run build_graph.py to regenerate the other one)")
+            which, path = alt, alt_path
+        gz = np.load(path)
         self.indptr = gz["indptr"].astype(np.int64)
         self.post = gz["post"]
         self.w = gz["w"]
