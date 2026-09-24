@@ -29,5 +29,7 @@ data/
 *.parquet
 *.csv.gz
 
-# packaged release bundle (66 MB, rebuild with the command in RUN.md)
+# packaged release bundle: flybrain-complete.zip is committed on purpose so it
+# has a GitHub download link; any other zip stays out
 *.zip
+!flybrain-complete.zip
