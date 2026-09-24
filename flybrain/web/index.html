@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مغز کامل مگس در یک محیط دوبعدی — FlyWire FAFB v783</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <b>مغز اسکن‌شدهٔ مگس، وصل به یک محیط دوبعدی</b>
+    <span id="counts">در حال بارگذاری کانکتوم…</span>
+  </div>
+  <div class="live">
+    <span class="pill" id="pill-t">t = 0 ms</span>
+    <span class="pill" id="pill-speed">—</span>
+    <span class="pill" id="pill-spk">0 spike/frame</span>
+    <button id="btn-pause">توقف</button>
+  </div>
+</header>
+
+<main>
+  <section class="panel brain">
+    <h2>۱۳۹٬۲۵۵ نورون واقعی — نمای جلویی مغز <small>هر نقطه = یک نورون، روشنایی = شلیک</small></h2>
+    <div class="canvas-wrap">
+      <canvas id="brain" width="780" height="560"></canvas>
+      <canvas id="brainfx" width="780" height="560"></canvas>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="rates" id="rates"></div>
+  </section>
+
+  <section class="panel world">
+    <h2>محیط دوبعدی <small>کلیک: گذاشتن شیء · کشیدن مگس با دکمهٔ راست</small></h2>
+    <canvas id="arena" width="520" height="355"></canvas>
+    <div class="eye">
+      <span>میدان دید (۹۶ ستون آزیموت)</span>
+      <canvas id="retina" width="520" height="34"></canvas>
+    </div>
+    <div class="motorbars" id="motorbars"></div>
+  </section>
+
+  <section class="panel ctrl">
+    <h2>کنترل</h2>
+    <div class="row tools">
+      <button class="tool sel" data-kind="sugar">قند</button>
+      <button class="tool" data-kind="bitter">تلخ</button>
+      <button class="tool" data-kind="water">آب</button>
+      <button class="tool" data-kind="pillar">ستون</button>
+    </div>
+    <div class="row">
+      <button id="btn-reset-obj">چیدمان اولیه</button>
+      <button id="btn-clear">خالی کردن</button>
+      <button id="btn-reset-brain">ری‌ست مغز</button>
+    </div>
+
+    <h3>تحریک مستقیم گروه‌های نورونی <small>مثل آزمایش‌های مقالهٔ Shiu</small></h3>
+    <div id="stims"></div>
+
+    <h3>پارامترها</h3>
+    <div id="sliders"></div>
+
+    <h3>گراف</h3>
+    <div class="row">
+      <button class="graph sel" data-g="full">کامل — ۱۵٫۰۹M اتصال</button>
+      <button class="graph" data-g="t5">سریع — ≥۵ سیناپس</button>
+    </div>
+    <p class="note" id="note"></p>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

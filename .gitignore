@@ -22,3 +22,9 @@ dist/
 build/
 coverage/
 .cache/
+
+# FlyWire connectome data (hundreds of MB, rebuilt by flybrain/fetch_data.sh + build_graph.py)
+data/
+*.npz
+*.parquet
+*.csv.gz
