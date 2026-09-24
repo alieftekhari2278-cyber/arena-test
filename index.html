@@ -3,63 +3,208 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>arena-test | بررسی هوش مصنوعی</title>
+    <meta name="theme-color" content="#08111f" />
     <meta
       name="description"
-      content="در این پروژه هوش مصنوعی را بررسی می‌کنیم و پروژه‌های مختلف را با استانداردهای GitHub می‌سازیم."
+      content="شبیه‌ساز دوبعدی اتصال‌های proofread دیتابیس FlyWire نسخه 783"
+    />
+    <title>FlyWire 783 | شبیه‌ساز کانکتوم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="site-header" aria-label="سربرگ سایت">
-      <a class="brand" href="#main-content">arena-test</a>
-      <nav class="nav" aria-label="ناوبری اصلی">
-        <a href="#mission">هدف</a>
-        <a href="#standards">استانداردها</a>
-        <a href="#roadmap">مسیر کار</a>
-      </nav>
-    </header>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="بازگشت به ابتدا">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>
+            <strong>FLYWIRE</strong>
+            <small>CONNECTOME LAB / 783</small>
+          </span>
+        </a>
+        <nav class="top-nav" aria-label="ناوبری اصلی">
+          <a href="#simulator">شبیه‌ساز</a>
+          <a href="#dataset">دیتاست</a>
+          <a href="#how-it-works">راهنما</a>
+        </nav>
+        <div class="topbar-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="topStatus">در حال بررسی داده</span>
+        </div>
+      </header>
 
-    <main id="main-content" class="main">
-      <section class="hero" id="mission" aria-labelledby="mission-title">
-        <p class="eyebrow">پروژه بررسی هوش مصنوعی</p>
-        <h1 id="mission-title">اینجا هوش مصنوعی را واقعی، شفاف و مرحله‌به‌مرحله بررسی می‌کنیم.</h1>
-        <p class="lead">
-          در این پروژه قرار است این هوش مصنوعی را بررسی کنیم، توانایی‌ها و محدودیت‌هایش را
-          بدون اغراق ثبت کنیم و پروژه‌های مختلف را با استانداردهای GitHub بسازیم.
-        </p>
-        <a class="cta" href="#roadmap">دیدن مسیر کار</a>
-      </section>
+      <main id="top">
+        <section class="hero section-wrap" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="kicker"><span>01</span> WHOLE-BRAIN CONNECTOME / PROOFREAD EDGES</p>
+            <h1 id="hero-title">مغز مگس را<br /><em>به‌صورت زنده ببین.</em></h1>
+            <p class="hero-lede">
+              یک نمای دوبعدی تعاملی از اتصال‌های نورون‌به‌نورون FlyWire؛ بر پایه فایل کامل
+              <span class="mono">proofread_connections_783.feather</span> و بدون بارگذاری دیتای خام ۹.۵ گیگابایتی.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#simulator">ورود به شبیه‌ساز <span>←</span></a>
+              <a
+                class="button button-ghost"
+                href="https://zenodo.org/records/10676866/files/proofread_connections_783.feather?download=1"
+                target="_blank"
+                rel="noreferrer"
+              >دانلود فایل کامل <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="hero-note">
+              <span class="note-icon">✓</span>
+              <span>فایل رسمی Zenodo · نسخه ۷۸۳ · MD5: <b>f48f972d…396b8a</b></span>
+            </div>
+          </div>
+          <div class="hero-visual" aria-label="پیش‌نمایش شبکه عصبی">
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="visual-label label-a">NEURON<br /><b>NETWORK</b></div>
+            <div class="visual-label label-b">SYNAPSE<br /><b>FLOW</b></div>
+            <div class="brain-glyph" aria-hidden="true">
+              <svg viewBox="0 0 300 300" role="img">
+                <path class="brain-line brain-line-main" d="M150 245c-57 0-101-32-101-87 0-18 6-37 18-52-5-33 15-57 44-56 17-23 51-22 68 0 30-1 49 24 44 56 12 15 18 34 18 52 0 55-44 87-91 87Z" />
+                <path class="brain-line" d="M112 56c-9 23-4 39 13 48m-47 7c22 3 35 16 38 38m-37 24c20-10 37-7 51 8m80-125c9 23 4 39-13 48m47 7c-22 3-35 16-38 38m37 24c-20-10-37-7-51 8M143 105c-13 24-12 49 4 71m10-71c13 24 12 49-4 71m-44-2c19 1 32 13 38 35m69-35c-19 1-32 13-38 35m-37 34v-48" />
+                <circle cx="108" cy="103" r="4" /><circle cx="188" cy="103" r="4" /><circle cx="87" cy="155" r="4" /><circle cx="213" cy="155" r="4" /><circle cx="150" cy="178" r="5" />
+              </svg>
+            </div>
+            <div class="visual-metric metric-a"><strong>130K+</strong><span>نورون proofread</span></div>
+            <div class="visual-metric metric-b"><strong>852 MB</strong><span>فایل اتصال‌ها</span></div>
+          </div>
+        </section>
 
-      <section class="cards" id="standards" aria-labelledby="standards-title">
-        <h2 id="standards-title">اصول کار در این مخزن</h2>
-        <article class="card">
-          <h3>شفافیت</h3>
-          <p>هر قابلیت، محدودیت و نتیجه تست باید مستند شود؛ بدون ادعای بی‌پشتوانه.</p>
-        </article>
-        <article class="card">
-          <h3>استانداردهای GitHub</h3>
-          <p>ساختار README، Pull Request، Issue و تغییرات پروژه باید قابل پیگیری و مرتب باشد.</p>
-        </article>
-        <article class="card">
-          <h3>پروژه‌های عملی</h3>
-          <p>برای سنجش واقعی، پروژه‌های کوچک و بزرگ ساخته می‌شوند و نتیجه آن‌ها بررسی می‌شود.</p>
-        </article>
-      </section>
+        <section class="data-strip section-wrap" aria-label="خلاصه دیتاست">
+          <div class="data-strip-heading">
+            <span class="live-pill"><span></span> DATA STATUS</span>
+            <p id="dataStatusText">در حال اتصال به منبع داده محلی…</p>
+          </div>
+          <div class="data-stat"><span>رکوردهای اتصال</span><strong>~ ۴ میلیون</strong><small>edge / neuropil rows</small></div>
+          <div class="data-stat"><span>نورون‌های proofread</span><strong>~ ۱۳۰ هزار</strong><small>unique root IDs</small></div>
+          <div class="data-stat"><span>نوع فایل</span><strong>FEATHER</strong><small>Apache Arrow IPC</small></div>
+          <div class="data-stat"><span>منبع رسمی</span><strong>ZENODO</strong><small>record 10676866</small></div>
+        </section>
 
-      <section class="roadmap" id="roadmap" aria-labelledby="roadmap-title">
-        <h2 id="roadmap-title">مسیر پیشنهادی</h2>
-        <ol>
-          <li>تعریف دقیق مسئله و معیارهای موفقیت.</li>
-          <li>ساخت نسخه اولیه با کد تمیز و قابل بررسی.</li>
-          <li>ثبت تغییرات و بازبینی با Pull Request.</li>
-          <li>مستندسازی نتیجه‌ها، خطاها و محدودیت‌ها.</li>
-        </ol>
-      </section>
-    </main>
+        <section id="simulator" class="simulator-section section-wrap" aria-labelledby="simulator-title">
+          <div class="section-heading">
+            <div>
+              <p class="kicker"><span>02</span> INTERACTIVE VIEWPORT</p>
+              <h2 id="simulator-title">نقشه اتصال‌ها</h2>
+            </div>
+            <p class="section-intro">یک نورون را انتخاب کن و مسیرهای ورودی و خروجی آن را در فضای دوبعدی دنبال کن.</p>
+          </div>
 
-    <footer class="site-footer">
-      <p>ساخته‌شده برای بررسی صادقانه هوش مصنوعی و ساخت پروژه‌های استاندارد در GitHub.</p>
-    </footer>
+          <div class="simulator-layout">
+            <aside class="control-panel" aria-label="کنترل‌های شبیه‌ساز">
+              <div class="panel-head"><span>QUERY CONTROLS</span><span class="panel-number">02 / 04</span></div>
+              <label class="field-label" for="rootInput">شناسه نورون هدف <span>ROOT ID</span></label>
+              <div class="search-field">
+                <input id="rootInput" inputmode="numeric" value="720575940000000001" aria-describedby="rootHelp" />
+                <button id="searchButton" type="button" aria-label="جست‌وجوی نورون">⌕</button>
+              </div>
+              <p id="rootHelp" class="field-help">برای شروع می‌توانی از شناسه پیشنهادی استفاده کنی.</p>
+
+              <label class="field-label range-label" for="synapseRange">حداقل تعداد سیناپس <output id="synapseValue" for="synapseRange">۱</output></label>
+              <input id="synapseRange" class="range-input" type="range" min="1" max="50" value="1" />
+              <div class="range-scale"><span>۱</span><span>۵۰+</span></div>
+
+              <label class="field-label" for="limitSelect">تعداد یال‌های نمایشی <span>VISIBLE EDGES</span></label>
+              <select id="limitSelect">
+                <option value="28">۲۸ یال</option>
+                <option value="50" selected>۵۰ یال</option>
+                <option value="100">۱۰۰ یال</option>
+              </select>
+
+              <div class="control-divider"></div>
+              <div class="toggle-row">
+                <div><strong>حرکت خودکار شبکه</strong><small>SIMULATION MOTION</small></div>
+                <button id="motionToggle" class="toggle is-on" type="button" role="switch" aria-checked="true"><span></span></button>
+              </div>
+              <div class="toggle-row">
+                <div><strong>نمایش برچسب‌ها</strong><small>NODE LABELS</small></div>
+                <button id="labelsToggle" class="toggle is-on" type="button" role="switch" aria-checked="true"><span></span></button>
+              </div>
+              <button id="resetButton" class="reset-button" type="button">بازنشانی نما <span>↻</span></button>
+            </aside>
+
+            <div class="viewport-card">
+              <div class="viewport-toolbar">
+                <div class="viewport-title"><span class="pulse-dot"></span><span id="viewportMode">DEMO GRAPH / LOCAL DATA NOT FOUND</span></div>
+                <div class="viewport-tools">
+                  <button id="zoomOut" type="button" title="کوچک‌نمایی">−</button>
+                  <button id="zoomIn" type="button" title="بزرگ‌نمایی">+</button>
+                  <button id="fitButton" type="button" title="جای‌گیری خودکار">⌗</button>
+                </div>
+              </div>
+              <div id="canvasWrap" class="canvas-wrap">
+                <canvas id="networkCanvas" aria-label="گراف دوبعدی اتصال‌های نورونی"></canvas>
+                <div class="canvas-hint">DRAG TO PAN <span>·</span> SCROLL TO ZOOM</div>
+                <div id="canvasLoading" class="canvas-loading" hidden><span class="spinner"></span><span>در حال خواندن اتصال‌ها…</span></div>
+                <div class="canvas-empty" id="canvasEmpty" hidden>برای دیدن گراف، یک شناسه معتبر وارد کن.</div>
+              </div>
+              <div class="viewport-legend">
+                <span><i class="legend-node legend-center"></i>نورون هدف</span>
+                <span><i class="legend-node legend-pre"></i>پیش‌سیناپسی</span>
+                <span><i class="legend-node legend-post"></i>پس‌سیناپسی</span>
+                <span><i class="legend-line"></i>شدت اتصال</span>
+              </div>
+            </div>
+
+            <aside class="inspector-panel" aria-label="اطلاعات انتخاب‌شده">
+              <div class="panel-head"><span>NODE INSPECTOR</span><span class="live-pill mini"><span></span> LIVE</span></div>
+              <div id="inspectorContent" class="inspector-content">
+                <div class="inspector-node-icon"><span></span></div>
+                <p class="inspector-kicker">SELECTED NODE</p>
+                <h3 id="selectedNodeName">نورون هدف</h3>
+                <code id="selectedNodeId">720575940000000001</code>
+                <div class="inspector-stats">
+                  <div><span>نقش</span><strong id="selectedNodeRole">TARGET</strong></div>
+                  <div><span>اتصال‌ها</span><strong id="selectedNodeEdges">—</strong></div>
+                </div>
+                <div class="inspector-rule"></div>
+                <p class="inspector-kicker">TOP CONNECTION</p>
+                <div class="top-connection"><span id="selectedNeuropil">ME_L</span><strong id="selectedSynapses">—</strong><small>synapses / neuropil</small></div>
+              </div>
+              <div class="inspector-footer"><span>DATA INTEGRITY</span><strong id="integrityStatus">PENDING</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="dataset" class="dataset-section section-wrap" aria-labelledby="dataset-title">
+          <div class="dataset-main">
+            <p class="kicker"><span>03</span> SOURCE &amp; PROVENANCE</p>
+            <h2 id="dataset-title">یک منبع، یک حقیقت.</h2>
+            <p>
+              این شبیه‌ساز از فایل خلاصه‌شده و proofread رسمی FlyWire استفاده می‌کند؛ هر ردیف، یک جفت نورون، ناحیه مغزی و تعداد سیناپس‌های بین آن‌هاست. فایل خام سیناپس‌ها عمداً وارد مرورگر نمی‌شود تا سیستم درگیر بارگذاری ۹.۵ گیگابایت داده نشود.
+            </p>
+            <div class="source-actions">
+              <a class="button button-primary" href="https://zenodo.org/records/10676866/files/proofread_connections_783.feather?download=1" target="_blank" rel="noreferrer">دانلود proofread_connections <span>↗</span></a>
+              <a class="text-link" href="https://zenodo.org/records/10676866" target="_blank" rel="noreferrer">مشاهده رکورد Zenodo ↗</a>
+            </div>
+          </div>
+          <div class="dataset-card">
+            <div class="dataset-card-head"><span class="file-icon">▱</span><div><strong>proofread_connections_783.feather</strong><small>FlyWire Whole-brain Connectome Connectivity Data</small></div></div>
+            <div class="dataset-details"><div><span>حجم رسمی</span><strong>۸۵۲.۰ MB</strong></div><div><span>فرمت</span><strong>Apache Feather</strong></div><div><span>MD5</span><strong class="mono">f48f972d…396b8a</strong></div><div><span>انتشار</span><strong>Version 783.0</strong></div></div>
+            <div class="dataset-progress"><div><span>آماده‌سازی منبع محلی</span><b id="datasetProgressLabel">در انتظار فایل</b></div><div class="progress-track"><i id="datasetProgress"></i></div></div>
+          </div>
+        </section>
+
+        <section id="how-it-works" class="how-section section-wrap" aria-labelledby="how-title">
+          <div class="section-heading"><div><p class="kicker"><span>04</span> HOW IT WORKS</p><h2 id="how-title">از Feather تا گراف</h2></div><p class="section-intro">مسیر داده ساده و قابل بررسی نگه داشته شده است.</p></div>
+          <div class="steps">
+            <article><span class="step-number">01</span><h3>دریافت امن</h3><p>فایل دقیق نسخه ۷۸۳ از لینک رسمی Zenodo دریافت و با MD5 بررسی می‌شود.</p></article>
+            <article><span class="step-number">02</span><h3>فیلتر سبک</h3><p>فقط یال‌های مرتبط با root ID انتخاب می‌شوند؛ تمام فایل به رابط کاربری ارسال نمی‌شود.</p></article>
+            <article><span class="step-number">03</span><h3>نمایش دوبعدی</h3><p>جهت اتصال، تعداد سیناپس و neuropil با یک گراف تعاملی روی canvas دیده می‌شوند.</p></article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer section-wrap"><span>FLYWIRE 783 / CONNECTOME LAB</span><span>ساخته‌شده با داده عمومی و قابل‌ردیابی</span><a href="#top">بازگشت به بالا ↑</a></footer>
+    </div>
+    <script src="app.js" defer></script>
   </body>
 </html>

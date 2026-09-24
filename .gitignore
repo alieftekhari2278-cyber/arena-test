@@ -22,3 +22,13 @@ dist/
 build/
 coverage/
 .cache/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Large FlyWire source data (downloaded locally, never committed)
+data/*.feather
+data/*.feather.part
+data/*.feather.invalid
+data/*.npy

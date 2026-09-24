@@ -1,0 +1,3 @@
+# Needed only when the full local Feather file is present.
+# The UI has an honest deterministic preview mode without these dependencies.
+pyarrow>=15,<22
