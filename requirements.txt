@@ -1,0 +1,7 @@
+# FlyWire 2D connectome simulator
+numpy>=1.24
+pyarrow>=14.0
+flask>=3.0
+
+# development
+pytest>=7.0

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FlyWire v783 — 2D Connectome Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <h1>FlyWire <span>v783</span> — 2D Connectome Simulator</h1>
+      <p class="sub" id="datasetLine">loading dataset…</p>
+    </div>
+  </div>
+  <div class="badges">
+    <span class="badge" id="badgeNeurons">— neurons</span>
+    <span class="badge" id="badgeEdges">— synaptic connections</span>
+    <span class="badge ok" id="badgeReal">real measured wiring</span>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="panel arena-panel">
+    <div class="panel-head">
+      <h2>2D world</h2>
+      <p>Click the arena to drop a light source. The agent is driven only by descending-neuron activity.</p>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="arena" width="1000" height="680"></canvas>
+      <div class="legend">
+        <span><i class="dot light"></i>light</span>
+        <span><i class="dot odor"></i>odour</span>
+        <span><i class="dot aversive"></i>aversive</span>
+        <span><i class="dot fly"></i>agent</span>
+      </div>
+    </div>
+    <div class="sensorbars">
+      <div class="sb"><label>eye L</label><div class="bar"><i id="bar-eye_left"></i></div></div>
+      <div class="sb"><label>eye R</label><div class="bar"><i id="bar-eye_right"></i></div></div>
+      <div class="sb"><label>odour L</label><div class="bar odor"><i id="bar-odor_left"></i></div></div>
+      <div class="sb"><label>odour R</label><div class="bar odor"><i id="bar-odor_right"></i></div></div>
+      <div class="sb"><label>DN L</label><div class="bar dn"><i id="bar-dn_left"></i></div></div>
+      <div class="sb"><label>DN R</label><div class="bar dn"><i id="bar-dn_right"></i></div></div>
+    </div>
+  </section>
+
+  <section class="panel brain-panel">
+    <div class="panel-head">
+      <h2>Whole brain — frontal projection</h2>
+      <p>Every dot is one of the 139,255 proofread neurons at its real FlyWire coordinate. Flashes are spikes.</p>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="brain" width="900" height="680"></canvas>
+      <div id="classLegend" class="class-legend"></div>
+    </div>
+  </section>
+
+  <aside class="panel side">
+    <div class="panel-head"><h2>Controls</h2></div>
+
+    <div class="row btns">
+      <button id="btnPlay" class="primary">Pause</button>
+      <button id="btnReset">Reset</button>
+    </div>
+
+    <label class="field">
+      <span>Speed — LIF steps per frame <b id="speedVal">2</b></span>
+      <input type="range" id="speed" min="1" max="12" value="2" />
+    </label>
+
+    <div class="group">
+      <h3>Stimulate a population</h3>
+      <div class="stim" id="stimList"></div>
+    </div>
+
+    <div class="group">
+      <h3>Behaviour</h3>
+      <div class="row btns small">
+        <button id="btnApproach" class="active">approach</button>
+        <button id="btnAvoid">avoid</button>
+      </div>
+      <p class="hint">Flips the sign of the descending-neuron steering readout. Everything upstream is the measured wiring.</p>
+    </div>
+
+    <div class="group">
+      <h3>Sources</h3>
+      <div class="row btns small">
+        <button data-kind="light">+ light</button>
+        <button data-kind="odor">+ odour</button>
+        <button data-kind="aversive">+ aversive</button>
+      </div>
+      <div class="row btns small">
+        <button id="btnClearSrc">clear</button>
+        <button id="btnResetSrc">default</button>
+      </div>
+      <p class="hint">Pick a type, then click inside the arena.</p>
+    </div>
+
+    <div class="group">
+      <h3>Telemetry</h3>
+      <table class="stats">
+        <tr><td>simulated time</td><td id="stSim">—</td></tr>
+        <tr><td>LIF step cost</td><td id="stStep">—</td></tr>
+        <tr><td>active neurons</td><td id="stActive">—</td></tr>
+        <tr><td>DN left / right</td><td id="stDn">—</td></tr>
+        <tr><td>agent speed</td><td id="stSpeed">—</td></tr>
+        <tr><td>wall hits</td><td id="stHits">—</td></tr>
+      </table>
+    </div>
+
+    <div class="group">
+      <h3>Model</h3>
+      <table class="stats" id="lifTable"></table>
+    </div>
+
+    <p class="cite" id="cite"></p>
+  </aside>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
