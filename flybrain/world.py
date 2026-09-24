@@ -80,9 +80,13 @@ class World:
             "turn_gain": 1.0,      # scales DN left/right asymmetry -> yaw
             "turn_sign": 1.0,      # +1: louder-left DNs steer right (avoidance)
                                    # -1: louder-left DNs steer left  (approach)
-            "adapt_mV": 0.0,       # spike-frequency adaptation; 0 = exactly Shiu et al.
-                                   # raise it to ~0.5 mV to tame the mushroom-body
-                                   # runaway that any olfactory drive produces
+            "adapt_mV": 0.05,      # spike-frequency adaptation. 0 = exactly Shiu et al.,
+                                   # but then the mushroom body ignites into a
+                                   # self-sustaining 70 Hz attractor the first time
+                                   # anything bumps the fly, and never comes back.
+                                   # 0.05 mV prevents that and still leaves the sugar
+                                   # -> MN9 cascade at 40 Hz. Set it to 0 in the UI to
+                                   # watch the runaway happen.
             "motor_on": True,      # let the brain drive the body
         }
         if cfg:

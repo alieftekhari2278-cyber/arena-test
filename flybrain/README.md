@@ -91,6 +91,14 @@ from descending-neuron left/right asymmetry to yaw, and the optional adaptation 
 neurons), and olfactory drive (any ORN input ≥10 Hz locks the mushroom body into a
 70 Hz self-sustaining attractor, which also destroys odour lateralisation).
 
+**Why adaptation is on by default (0.05 mV).** With the paper's exact parameters the
+mushroom body ignites into that same 70 Hz attractor the first time anything bumps the
+fly — about 4 seconds into a free run — and never recovers, not even after a state
+reset. A 0.05 mV / 150 ms adaptation current prevents it, holds the whole-brain mean
+rate at a biologically plausible ~2 Hz, still passes the sugar→MN9 test at 40 Hz, and
+happens to make the simulation 5× faster. Set the slider to 0 in the UI to watch the
+runaway happen. This is a deliberate deviation from Shiu et al. and the only one.
+
 **Cannot be claimed:** this fly does not learn. The LIF model has no synaptic plasticity,
 no neuropeptides, no gap junctions and no internal state.
 
