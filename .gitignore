@@ -22,3 +22,10 @@ dist/
 build/
 coverage/
 .cache/
+
+# Python build artifacts
+__pycache__/
+*.pyc
+
+# Session-generated distribution archive (regenerate with: zip -r fly-brain-project.zip fly-brain-research)
+fly-brain-project.zip

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🪰 مغز مگس زنده — FlyWire 783</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0e14;--panel:#121826;--line:#1f2937;--txt:#dbe4f0;--dim:#7c8aa0;--acc:#00e5ff;--sugar:#ffd54f;--bitter:#ff5b5b}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--txt);font-family:Vazirmatn,Tahoma,sans-serif;font-size:14px}
+  header{display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header h1{font-size:17px;font-weight:800}
+  .badge{background:#0e2a33;color:var(--acc);border:1px solid #145; padding:3px 10px;border-radius:20px;font-size:12px}
+  .dot{width:9px;height:9px;border-radius:50%;background:#f59e0b;display:inline-block;margin-inline-start:6px}
+  .dot.on{background:#22c55e;box-shadow:0 0 8px #22c55e}
+  main{display:flex;gap:12px;padding:12px 18px;align-items:stretch;flex-wrap:wrap}
+  #arenaWrap{flex:1 1 620px;min-width:340px}
+  #side{width:308px;display:flex;flex-direction:column;gap:10px}
+  canvas{width:100%;border:1px solid var(--line);border-radius:12px;background:#0d1117;display:block}
+  #brainWrap{padding:0 18px 14px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .panel h3{font-size:13px;color:var(--dim);margin-bottom:8px;font-weight:600}
+  .row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  button{background:#1b2740;color:var(--txt);border:1px solid #2b3b5e;border-radius:8px;padding:6px 10px;cursor:pointer;font-family:inherit;font-size:13px}
+  button:hover{background:#24345a}
+  button.active{background:#0e2a33;border-color:var(--acc);color:var(--acc)}
+  button.sugar.active{border-color:var(--sugar);color:var(--sugar)}
+  button.bitter.active{border-color:var(--bitter);color:var(--bitter)}
+  .meter{margin:7px 0}
+  .meter .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-bottom:3px}
+  .bar{height:8px;background:#0d1117;border-radius:6px;overflow:hidden;border:1px solid #1a2436}
+  .bar>i{display:block;height:100%;width:0%;border-radius:6px;transition:width .15s}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12.5px}
+  .stats b{color:var(--acc);font-weight:600}
+  .hint{color:var(--dim);font-size:12px;line-height:1.9}
+  .lvl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim)}
+  input[type=range]{flex:1;accent-color:var(--acc)}
+  #overlay{position:fixed;inset:0;background:rgba(9,12,18,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:50}
+  #overlay .brain-emoji{font-size:52px;animation:fl 1.2s infinite alternate}
+  @keyframes fl{to{transform:translateY(-10px) rotate(8deg)}}
+  #overlay p{color:var(--dim)}
+  .spin{width:34px;height:34px;border:3px solid #1f2937;border-top-color:var(--acc);border-radius:50%;animation:sp 0.9s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  footer{padding:8px 18px;color:#55637a;font-size:11.5px;border-top:1px solid var(--line)}
+  #evlog{font-size:12px;color:var(--dim);min-height:34px;line-height:1.8}
+</style>
+</head>
+<body>
+<div id="overlay"><div class="brain-emoji">🪰</div><div class="spin"></div>
+  <h2 id="ovTitle">در حال بارگذاری مغز مگس…</h2>
+  <p id="ovSub">۱۳۸٬۶۳۹ نورون · ۱۵٬۰۹۱٬۹۸۳ اتصال · ۵۴٬۴۹۲٬۹۲۲ سیناپس</p></div>
+
+<header>
+  <h1>🪰 مغز مگس زنده در آرنای دوبعدی</h1>
+  <span class="badge" id="bNeurons">…</span>
+  <span class="badge" id="bDN">نورون فرمان: …</span>
+  <span class="badge">FlyWire 783 · Shiu et al. 2024</span>
+  <span class="badge" style="margin-inline-start:auto">وضعیت <span class="dot" id="dot"></span></span>
+</header>
+
+<main>
+  <div id="arenaWrap">
+    <canvas id="arena" width="1000" height="700"></canvas>
+  </div>
+  <div id="side">
+    <div class="panel">
+      <h3>کنترل محیط</h3>
+      <div class="row">
+        <button id="mSugar" class="sugar active">🍬 گذاشتن شکر</button>
+        <button id="mBitter" class="bitter">☠️ گذاشتن تلخ</button>
+        <button id="clear">🧹 پاک‌کردن غذا</button>
+      </div>
+      <div class="row">
+        <button id="pause">⏸ توقف</button>
+        <button id="reset">🎲 ریست مگس</button>
+        <button id="invert">🔄 چرخش: عادی</button>
+        <button id="explore" class="active">🧭 نویز اکتشافی</button>
+      </div>
+      <div class="lvl">سرعت زمان زیستی <input type="range" id="speed" min="0.01" max="0.15" step="0.005" value="0.05"><b id="spdVal">×۰٫۰۵</b></div>
+      <p class="hint">روی <b>آرنا</b> کلیک کن تا غذا بگذاری · روی <b>مغز</b> (پایین) کلیک کن تا نورون‌های همان نقطه را تحریک کنی (اپتوژنتیک مصنوعی)</p>
+    </div>
+    <div class="panel">
+      <h3>فعالیت عصبی زنده (میانگین هرتز)</h3>
+      <div class="meter"><div class="lbl"><span>🍬 چشای قندی — چپ</span><span id="v_sugarL">0</span></div><div class="bar"><i id="b_sugarL" style="background:var(--sugar)"></i></div></div>
+      <div class="meter"><div class="lbl"><span>🍬 چشای قندی — راست</span><span id="v_sugarR">0</span></div><div class="bar"><i id="b_sugarR" style="background:var(--sugar)"></i></div></div>
+      <div class="meter"><div class="lbl"><span>☠️ چشای تلخ — چپ</span><span id="v_bitterL">0</span></div><div class="bar"><i id="b_bitterL" style="background:var(--bitter)"></i></div></div>
+      <div class="meter"><div class="lbl"><span>☠️ چشای تلخ — راست</span><span id="v_bitterR">0</span></div><div class="bar"><i id="b_bitterR" style="background:var(--bitter)"></i></div></div>
+      <div class="meter"><div class="lbl"><span>🎯 نورون فرمان (DN) — چپ</span><span id="v_dnL">0</span></div><div class="bar"><i id="b_dnL" style="background:var(--acc)"></i></div></div>
+      <div class="meter"><div class="lbl"><span>🎯 نورون فرمان (DN) — راست</span><span id="v_dnR">0</span></div><div class="bar"><i id="b_dnR" style="background:var(--acc)"></i></div></div>
+    </div>
+    <div class="panel">
+      <h3>آمار شبیه‌سازی</h3>
+      <div class="stats">
+        <span>سرعت زیستی: <b id="s_bioRate">—</b></span>
+        <span>اسپیک/ثانیه: <b id="s_spk">—</b></span>
+        <span>نورون‌های فعال: <b id="s_act">—</b></span>
+        <span>زمان زیستی: <b id="s_bio">—</b> ثانیه</span>
+        <span>🍬 شکر خورده‌شده: <b id="s_fed">0</b></span>
+        <span>☠️ برخورد با تلخ: <b id="s_bit">0</b></span>
+      </div>
+      <div id="evlog"></div>
+    </div>
+  </div>
+</main>
+
+<div id="brainWrap">
+  <div class="panel" style="padding:8px 12px 4px">
+    <h3>نقشه‌ی آناتومیک مغز — موقعیت واقعی سومای هر نورون · نقاط روشن = نورون‌های در حال شلیک (زرد: قندی، قرمز: تلخ، فیروزه‌ای: نورون فرمان)</h3>
+    <canvas id="brain" width="1200" height="250"></canvas>
+  </div>
+</div>
+
+<footer>کانکتوم واقعی FlyWire (نسخه ۷۸۳) — بدون حذف حتی یک نورون. مدل LIF از Shiu et al., Nature 2024. نگاشت حس→حرکت: نورون‌های چشای قندی/تلخ ← نورون نزولی انتخاب‌شده با کالیبراسیون واقعی. چرخش و نویز اکتشافی لایه‌های مهندسی‌شده‌اند، نه بخشی از کانکتوم. ساخته‌شده در Arena.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const fa=n=>Number(n).toLocaleString('fa-IR');
+let mode='sugar', S=null, pos=null, codes=null, base=null, trail=[], flashes=[], lastEv=0, smRate=0;
+const COLORS={0:'#4a5568',1:'#ffd54f',2:'#ff5b5b',3:'#00e5ff',4:'#0f766e',5:'#b388ff',6:'#1c2a38'};
+
+function connect(){
+  const proto=location.protocol==='https:'?'wss':'ws';
+  const ws=new WebSocket(`${proto}://${location.host}/ws`);
+  ws.binaryType='arraybuffer';
+  ws.onopen=()=>$('dot').classList.add('on');
+  ws.onclose=()=>{$('dot').classList.remove('on'); setTimeout(connect,1500);};
+  ws.onerror=()=>ws.close();
+  ws.onmessage=e=>{
+    if(e.data instanceof ArrayBuffer){parsePos(e.data); return;}
+    const m=JSON.parse(e.data);
+    if(m.type==='hello'||m.type==='stage'){
+      if(m.stage==='ready'&&S&&S.init){/*already*/}
+      else{$('ovTitle').textContent = m.stage==='calibrating'?'در حال کالیبراسیون مدارهای چشایی…':m.stage==='error'?'خطا در راه‌اندازی':'در حال بارگذاری مغز مگس…';}
+      return;
+    }
+    if(m.type==='init'){
+      $('bNeurons').textContent=`${fa(m.n)} نورون · ${fa(m.edges)} اتصال · ${fa(m.syn)} سیناپس`;
+      $('bDN').textContent=`نورون فرمان: ${m.dn} (کالیبراسیون: قند ${Math.round(m.cal.ipsiL)}/${Math.round(m.cal.ipsiR)}Hz، تلخ ${Math.round(m.cal.bitter)}Hz)`;
+      window.WORLD=m.world; window.INIT=m; $('overlay').style.display='none';
+      return;
+    }
+    if(m.type==='state'){S=m; updUI(m);}
+  };
+  window.send=o=>{if(ws.readyState===1)ws.send(JSON.stringify(o))};
+}
+function parsePos(buf){
+  const dv=new DataView(buf), n=dv.byteLength/5;
+  pos=new Float32Array(n*2); codes=new Uint8Array(n);
+  for(let i=0;i<n;i++){pos[i*2]=dv.getInt16(i*5,true)/4095; pos[i*2+1]=dv.getInt16(i*5+2,true)/4095; codes[i]=dv.getUint8(i*5+4);}
+  buildBase();
+}
+function buildBase(){
+  const c=$('brain'), g=c.getContext('2d');
+  base=document.createElement('canvas'); base.width=c.width; base.height=c.height;
+  const bg=base.getContext('2d');
+  bg.fillStyle='#0d1117'; bg.fillRect(0,0,base.width,base.height);
+  for(let i=0;i<codes.length;i++){
+    bg.fillStyle=COLORS[codes[i]];
+    const x=(1-pos[i*2])*base.width, y=(1-pos[i*2+1])*base.height;
+    bg.fillRect(x,y,codes[i]>=3&&codes[i]<=5?2:1.4,codes[i]>=3&&codes[i]<=5?2:1.4);
+  }
+}
+function updUI(m){
+  if(m.ctl){
+    $('pause').textContent=m.ctl.running?'⏸ توقف':'▶ ادامه';
+    $('pause').classList.toggle('active',!m.ctl.running);
+    $('invert').textContent=m.ctl.invert?'🔄 چرخش: برعکس':'🔄 چرخش: عادی';
+    $('invert').classList.toggle('active',m.ctl.invert);
+    $('explore').classList.toggle('active',!!m.ctl.explore);
+    $('ambient').classList.toggle('active',!!m.ctl.ambient);
+    if(document.activeElement!==$('speed')){$('speed').value=m.ctl.speed;$('spdVal').textContent='×'+(+m.ctl.speed).toFixed(3);}
+  }
+  const mx=180;
+  for(const k of ['sugarL','sugarR','bitterL','bitterR','dnL','dnR']){
+    const v=m.meters[k]||0; $('v_'+k).textContent=Math.round(v);
+    $('b_'+k).style.width=Math.min(100,100*v/mx)+'%';
+  }
+  smRate = smRate*0.6 + (+m.stats.bioRate)*0.4;
+  $('s_bioRate').textContent='×'+smRate.toFixed(3);
+  $('s_spk').textContent=fa(m.stats.spikesPerSec);
+  $('s_act').textContent=fa(m.stats.active);
+  $('s_bio').textContent=fa(Math.round(m.stats.bioS));
+  $('s_fed').textContent=fa(m.stats.fed);
+  $('s_bit').textContent=fa(m.stats.bitterHits);
+  for(const ev of m.events||[]){
+    flashes.push({x:ev.x,y:ev.y,t:1,kind:ev.kind});
+    log(ev.kind==='eat'?'🍬 مگس یک لکه شکر را خورد!':'☠️ مگس به ماده تلخ برخورد کرد!');
+  }
+}
+function log(t){const el=$('evlog'); el.innerHTML=`<div>• ${t}</div>`+el.innerHTML; if(el.children.length>3)el.removeChild(el.lastChild);}
+
+// ---------- arena rendering ----------
+const ac=$('arena'), ag=ac.getContext('2d');
+function drawArena(){
+  ag.fillStyle='#0d1117'; ag.fillRect(0,0,1000,700);
+  ag.strokeStyle='#151d2b'; ag.lineWidth=1;
+  for(let x=0;x<1000;x+=50){ag.beginPath();ag.moveTo(x,0);ag.lineTo(x,700);ag.stroke();}
+  for(let y=0;y<700;y+=50){ag.beginPath();ag.moveTo(0,y);ag.lineTo(1000,y);ag.stroke();}
+  if(!S)return;
+  // foods
+  for(const f of S.foods){
+    const sug=f.kind==='sugar', t=performance.now()/400;
+    ag.beginPath(); ag.arc(f.x,f.y,11+Math.sin(t+f.x)*2,0,7);
+    ag.fillStyle=sug?'rgba(255,213,79,.25)':'rgba(255,91,91,.22)'; ag.fill();
+    ag.beginPath(); ag.arc(f.x,f.y,6,0,7);
+    ag.fillStyle=sug?'#ffd54f':'#ff5b5b'; ag.fill();
+    ag.fillStyle=sug?'#8a6d1a':'#7c2a2a'; ag.font='11px serif'; ag.textAlign='center';
+    ag.fillText(sug?'🍬':'☠️',f.x,f.y-13);
+  }
+  // sensing radius
+  const fl=S.fly;
+  ag.beginPath(); ag.arc(fl.x,fl.y,170,0,7); ag.strokeStyle='rgba(0,229,255,.12)'; ag.setLineDash([6,8]); ag.stroke(); ag.setLineDash([]);
+  // trail
+  trail.push([fl.x,fl.y]); if(trail.length>90)trail.shift();
+  ag.beginPath();
+  for(let i=0;i<trail.length;i++){const p=trail[i]; i?ag.lineTo(p[0],p[1]):ag.moveTo(p[0],p[1]);}
+  ag.strokeStyle='rgba(0,229,255,.30)'; ag.lineWidth=2; ag.stroke();
+  // fly
+  ag.save(); ag.translate(fl.x,fl.y); ag.rotate(fl.th);
+  ag.fillStyle='rgba(160,180,255,.35)';
+  ag.beginPath(); ag.ellipse(-2,-7,9,4,-.5,0,7); ag.fill();
+  ag.beginPath(); ag.ellipse(-2,7,9,4,.5,0,7); ag.fill();
+  ag.fillStyle='#e8eef7'; ag.beginPath(); ag.ellipse(-3,0,13,6,0,0,7); ag.fill();
+  ag.fillStyle='#22272e'; ag.beginPath(); ag.arc(8,-3,3,0,7); ag.arc(8,3,3,0,7); ag.fill();
+  ag.restore();
+  // event flashes
+  flashes=flashes.filter(f=>f.t>0);
+  for(const f of flashes){
+    ag.beginPath(); ag.arc(f.x,f.y,(1-f.t)*46,0,7);
+    ag.strokeStyle=f.kind==='eat'?`rgba(255,213,79,${f.t})`:`rgba(255,91,91,${f.t})`;
+    ag.lineWidth=3; ag.stroke(); f.t-=.02;
+  }
+}
+// ---------- brain rendering ----------
+const bc=$('brain'), bg2=bc.getContext('2d');
+function drawBrain(){
+  if(!base){bg2.fillStyle='#0d1117';bg2.fillRect(0,0,bc.width,bc.height);return;}
+  bg2.drawImage(base,0,0);
+  if(!S||!S.brain)return;
+  const n=S.brain.i.length, t=performance.now()/300;
+  bg2.globalCompositeOperation='lighter';
+  for(let k=0;k<n;k++){
+    const i=S.brain.i[k], r=S.brain.r[k];
+    const x=(1-pos[i*2])*bc.width, y=(1-pos[i*2+1])*bc.height;
+    const c=codes[i];
+    let col= c===1?'255,213,79': c===2?'255,91,91': c===3?'0,229,255': c===5?'179,136,255':'120,220,255';
+    const rad=1.2+Math.min(3.4,r/45), a=Math.min(.9,.25+r/90);
+    bg2.fillStyle=`rgba(${col},${a})`;
+    bg2.beginPath(); bg2.arc(x,y,rad,0,7); bg2.fill();
+  }
+  bg2.globalCompositeOperation='source-over';
+}
+(function loop(){drawArena(); drawBrain(); requestAnimationFrame(loop);})();
+
+// ---------- controls ----------
+$('mSugar').onclick=()=>{mode='sugar';$('mSugar').classList.add('active');$('mBitter').classList.remove('active');};
+$('mBitter').onclick=()=>{mode='bitter';$('mBitter').classList.add('active');$('mSugar').classList.remove('active');};
+$('clear').onclick=()=>send({type:'clear'});
+$('reset').onclick=()=>send({type:'reset'});
+$('pause').onclick=()=>{const r=!(S&&S.ctl)?true:!S.ctl.running; send({type:'ctl',running:r});
+  $('pause').textContent=r?'▶ ادامه':'⏸ توقف'; $('pause').classList.toggle('active',r);};
+$('invert').onclick=()=>{const v=!(S&&S.ctl)?false:!!S.ctl.invert; send({type:'ctl',invert:v});
+  $('invert').textContent=v?'🔄 چرخش: برعکس':'🔄 چرخش: عادی'; $('invert').classList.toggle('active',v);};
+$('explore').onclick=()=>{const v=!(S&&S.ctl)?false:!S.ctl.explore; send({type:'ctl',explore:v});
+  $('explore').classList.toggle('active',v);};
+$('ambient').onclick=()=>{const v=!(S&&S.ctl)?false:!S.ctl.ambient; send({type:'ctl',ambient:v});
+  $('ambient').classList.toggle('active',v);};
+$('speed').oninput=e=>{send({type:'ctl',speed:+e.target.value}); $('spdVal').textContent='×'+(+e.target.value).toFixed(3);};
+ac.addEventListener('click',e=>{
+  const r=ac.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width*1000, y=(e.clientY-r.top)/r.height*700;
+  send({type:'food',x,y,kind:mode});
+});
+bc.addEventListener('click',e=>{
+  const r=bc.getBoundingClientRect();
+  const nx=1-(e.clientX-r.left)/r.width, ny=1-(e.clientY-r.top)/r.height;
+  send({type:'stim',x:nx,y:ny});
+});
+connect();
+</script>
+</body>
+</html>
