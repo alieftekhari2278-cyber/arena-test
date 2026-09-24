@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drosophila Whole-Brain Connectome (139,255 Neurons) — 2D Embodiment</title>
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --panel-bg: #121826;
+            --card-bg: #1a2235;
+            --accent-cyan: #00f0ff;
+            --accent-green: #10b981;
+            --accent-purple: #a855f7;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #2d3748;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; }
+        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+        
+        header {
+            background: linear-gradient(90deg, #101626, #1e293b);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .header-title h1 { font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .badge { font-size: 0.72rem; padding: 3px 8px; border-radius: 9999px; background: rgba(0,240,255,0.15); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); font-weight: 600; text-transform: uppercase; }
+        .stats-strip { display: flex; gap: 16px; font-size: 0.85rem; }
+        .stat-item { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; }
+        .stat-item span { color: var(--accent-cyan); font-weight: 700; }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 820px 1fr;
+            gap: 16px;
+            padding: 16px;
+            max-width: 1700px;
+            margin: 0 auto;
+        }
+        
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .panel-header h2 { font-size: 1rem; font-weight: 600; color: #e2e8f0; display: flex; align-items: center; gap: 6px; }
+        
+        /* 2D Canvas Container */
+        .canvas-container {
+            position: relative;
+            background: #060911;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #1f293d;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+        }
+        #arenaCanvas { display: block; width: 800px; height: 560px; cursor: crosshair; }
+        
+        /* Canvas Toolbar */
+        .canvas-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .tool-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .tool-btn:hover { background: #243048; border-color: var(--accent-cyan); }
+        .tool-btn.active { background: rgba(0, 240, 255, 0.2); border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 600; }
+        
+        /* Telemetry HUD & Connectome Panels */
+        .telemetry-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .neuropil-bars {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .bar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+        .bar-label { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px; color: var(--text-muted); }
+        .bar-label b { color: #fff; }
+        .bar-track { width: 100%; height: 8px; background: #0c101a; border-radius: 4px; overflow: hidden; }
+        .bar-fill { height: 100%; width: 0%; transition: width 0.1s ease-out; background: var(--accent-cyan); }
+        
+        /* Motor Readouts */
+        .motor-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .motor-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+        .motor-title { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        .motor-val { font-size: 1.1rem; font-weight: 700; color: var(--accent-cyan); margin-top: 2px; }
+        
+        /* Raster Plot */
+        #rasterCanvas {
+            width: 100%;
+            height: 110px;
+            background: #070a12;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: block;
+        }
+        
+        /* Optogenetic Deck */
+        .optodeck {
+            margin-top: 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .optodeck h3 { font-size: 0.85rem; color: #e2e8f0; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .opto-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        .opto-btn {
+            background: #202b42;
+            border: 1px solid #3b4c6b;
+            color: #e2e8f0;
+            padding: 7px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-align: center;
+            transition: all 0.15s;
+        }
+        .opto-btn:hover { background: #2f3e61; border-color: #60a5fa; }
+        .opto-btn:active { transform: scale(0.96); background: var(--accent-cyan); color: #000; }
+        .opto-btn.sugar { border-color: var(--accent-green); color: #34d399; }
+        .opto-btn.sugar:hover { background: rgba(16, 185, 129, 0.2); }
+        .opto-btn.escape { border-color: var(--accent-red); color: #f87171; }
+        .opto-btn.escape:hover { background: rgba(239, 68, 68, 0.2); }
+        
+        /* Region Silencing / Lesions */
+        .lesion-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .lesion-tag {
+            font-size: 0.72rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #1e273b;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            color: var(--text-muted);
+            user-select: none;
+        }
+        .lesion-tag.silenced {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: var(--accent-red);
+            color: #fca5a5;
+            text-decoration: line-through;
+        }
+        
+        /* Information drawer */
+        .info-box {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+            background: #0d131f;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-cyan);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>🧠 Drosophila Whole-Brain Connectome <span class="badge">FlyWire FAFB v783 Embodied</span></h1>
+        </div>
+        <div class="stats-strip">
+            <div class="stat-item">Neurons: <span id="statNeurons">139,255 (100%)</span></div>
+            <div class="stat-item">Synapses: <span>2,196,069</span></div>
+            <div class="stat-item">Step Time: <span id="statStep">0 ms</span></div>
+            <div class="stat-item">Spikes/ms: <span id="statSpikes">0</span></div>
+            <div class="stat-item">Food Eaten: <span id="statFood" style="color:var(--accent-green);">0</span></div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Left Column: 2D Simulation Arena -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2>🌐 2D Sensorimotor Closed-Loop Arena</h2>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <label style="font-size: 0.75rem; color: var(--text-muted);">Speed:</label>
+                    <select id="simSpeed" style="background: var(--card-bg); color: #fff; border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                        <option value="1">1x Normal</option>
+                        <option value="2" selected>2x Real-time</option>
+                        <option value="4">4x Fast</option>
+                    </select>
+                    <button class="tool-btn" id="btnPlayPause">⏸️ Pause</button>
+                    <button class="tool-btn" id="btnReset">🔄 Reset Fly</button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="arenaCanvas" width="800" height="560"></canvas>
+            </div>
+
+            <!-- Arena Toolbar -->
+            <div class="canvas-toolbar">
+                <span style="font-size: 0.8rem; color: var(--text-muted); margin-right: 4px;">Place Stimulus:</span>
+                <button class="tool-btn active" data-tool="food">🟢 Sugar / Food</button>
+                <button class="tool-btn" data-tool="light">💡 Light Source</button>
+                <button class="tool-btn" data-tool="obstacle">🧱 Obstacle</button>
+                <button class="tool-btn" data-tool="poison">🟣 Repellent / Bitter</button>
+                <button class="tool-btn" id="btnClearItems" style="margin-left: auto; color: #f87171;">🗑️ Clear Arena Items</button>
+            </div>
+
+            <div class="info-box">
+                <b>Closed-Loop Mechanics:</b> The fly perceives 2D light & food odor via Left/Right receptive fields $\to$ currents inject into the <b>exact 139,255 LIF neurons</b> $\to$ Descending Neurons (DNs) decode motor thrust & turning $\to$ updates 2D physics!
+            </div>
+        </div>
+
+        <!-- Right Column: Connectome & Neural HUD -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2>📊 Connectome Activity & Motor Telemetry</h2>
+                <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border-color: var(--accent-green);">Live LIF Propagation</span>
+            </div>
+
+            <div class="telemetry-grid">
+                <!-- Neuropil Activity Meters -->
+                <div class="neuropil-bars">
+                    <div class="bar-card">
+                        <div class="bar-label"><span>Optic Lobe Left (45k)</span><b id="rate-OL_L">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-OL_L" style="background: #38bdf8;"></div></div>
+                    </div>
+                    <div class="bar-card">
+                        <div class="bar-label"><span>Optic Lobe Right (45k)</span><b id="rate-OL_R">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-OL_R" style="background: #38bdf8;"></div></div>
+                    </div>
+                    <div class="bar-card">
+                        <div class="bar-label"><span>Antennal Lobes (3.5k)</span><b id="rate-AL">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-AL" style="background: #a855f7;"></div></div>
+                    </div>
+                    <div class="bar-card">
+                        <div class="bar-label"><span>Mushroom Body (5k KCs)</span><b id="rate-MB">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-MB" style="background: #ec4899;"></div></div>
+                    </div>
+                    <div class="bar-card">
+                        <div class="bar-label"><span>Central Complex (3.2k)</span><b id="rate-CX">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-CX" style="background: #eab308;"></div></div>
+                    </div>
+                    <div class="bar-card">
+                        <div class="bar-label"><span>Subesophageal SEZ (6.5k)</span><b id="rate-SEZ">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-SEZ" style="background: #10b981;"></div></div>
+                    </div>
+                    <div class="bar-card">
+                        <div class="bar-label"><span>AMMC / Mechanosensory</span><b id="rate-AMMC">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-AMMC" style="background: #f97316;"></div></div>
+                    </div>
+                    <div class="bar-card">
+                        <div class="bar-label"><span>Descending Motor (1.3k DNs)</span><b id="rate-DN">0 Hz</b></div>
+                        <div class="bar-track"><div class="bar-fill" id="fill-DN" style="background: #ef4444;"></div></div>
+                    </div>
+                </div>
+
+                <!-- Motor Readouts -->
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Descending Neuron Motor Decoders</span>
+                    <div class="motor-grid">
+                        <div class="motor-box">
+                            <div class="motor-title">Turn Bias</div>
+                            <div class="motor-val" id="motSteer">0.0</div>
+                        </div>
+                        <div class="motor-box">
+                            <div class="motor-title">Forward Speed</div>
+                            <div class="motor-val" id="motSpeed">0.0</div>
+                        </div>
+                        <div class="motor-box">
+                            <div class="motor-title">Feeding (PER)</div>
+                            <div class="motor-val" id="motFeed" style="color: var(--accent-green);">0.0</div>
+                        </div>
+                        <div class="motor-box">
+                            <div class="motor-title">Escape (GF)</div>
+                            <div class="motor-val" id="motEscape" style="color: var(--accent-red);">0.0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-Time Raster Plot -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">
+                        <span>Spike Raster Scope (Sampled Across 139k Neurons)</span>
+                        <span id="rasterRate">0 spikes/step</span>
+                    </div>
+                    <canvas id="rasterCanvas" width="500" height="110"></canvas>
+                </div>
+
+                <!-- Optogenetic Laser Controls -->
+                <div class="optodeck">
+                    <h3>🔬 Virtual Optogenetic Laser Stimulation</h3>
+                    <div class="opto-buttons">
+                        <button class="opto-btn" data-stim="vision_left">🔦 Laser Left Eye</button>
+                        <button class="opto-btn" data-stim="vision_right">🔦 Laser Right Eye</button>
+                        <button class="opto-btn sugar" data-stim="sweet">🍬 Sweet Taste GRNs</button>
+                        <button class="opto-btn" data-stim="olfactory_left">👃 Odor Left Ant.</button>
+                        <button class="opto-btn" data-stim="olfactory_right">👃 Odor Right Ant.</button>
+                        <button class="opto-btn escape" data-stim="escape_gf">⚡ Giant Fiber Escape</button>
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">Pharmacological / Genetic Lesion (Click to Silence Neuropil):</span>
+                        <div class="lesion-toggles">
+                            <span class="lesion-tag" data-region="OL_L">Mute Left Eye (OL_L)</span>
+                            <span class="lesion-tag" data-region="OL_R">Mute Right Eye (OL_R)</span>
+                            <span class="lesion-tag" data-region="AL">Mute Olfaction (AL)</span>
+                            <span class="lesion-tag" data-region="MB">Mute Mushroom Body</span>
+                            <span class="lesion-tag" data-region="CX">Mute Central Complex</span>
+                            <span class="lesion-tag" data-region="SEZ">Mute SEZ (Taste)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('arenaCanvas');
+        const ctx = canvas.getContext('2d');
+        const rasterCanvas = document.getElementById('rasterCanvas');
+        const rCtx = rasterCanvas.getContext('2d');
+
+        let isRunning = true;
+        let simSpeed = 2;
+        let activeTool = 'food';
+        let latestState = null;
+        let rasterHistory = []; // rolling spike records
+        const MAX_RASTER_COLS = 120;
+
+        // UI Element References
+        const statStep = document.getElementById('statStep');
+        const statSpikes = document.getElementById('statSpikes');
+        const statFood = document.getElementById('statFood');
+        const motSteer = document.getElementById('motSteer');
+        const motSpeed = document.getElementById('motSpeed');
+        const motFeed = document.getElementById('motFeed');
+        const motEscape = document.getElementById('motEscape');
+        const rasterRate = document.getElementById('rasterRate');
+
+        // Tool buttons
+        document.querySelectorAll('.canvas-toolbar .tool-btn[data-tool]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.canvas-toolbar .tool-btn[data-tool]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeTool = btn.dataset.tool;
+            });
+        });
+
+        // Optogenetic stimulation triggers
+        document.querySelectorAll('.opto-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const stimTarget = btn.dataset.stim;
+                fetch('/api/stimulate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({target: stimTarget, intensity: 24.0})
+                });
+            });
+        });
+
+        // Lesion / silencing toggles
+        document.querySelectorAll('.lesion-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('silenced');
+                const isSilenced = tag.classList.contains('silenced');
+                fetch('/api/lesion', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({region: tag.dataset.region, silenced: isSilenced})
+                });
+            });
+        });
+
+        // Canvas item placement
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            fetch('/api/add_item', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({type: activeTool, x: x, y: y})
+            }).then(r => r.json()).then(st => { latestState = st; });
+        });
+
+        document.getElementById('btnClearItems').addEventListener('click', () => {
+            fetch('/api/clear_items', {method: 'POST'}).then(r => r.json()).then(st => { latestState = st; });
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => {
+            fetch('/api/reset', {method: 'POST'}).then(r => r.json()).then(st => { latestState = st; });
+        });
+
+        const btnPlayPause = document.getElementById('btnPlayPause');
+        btnPlayPause.addEventListener('click', () => {
+            isRunning = !isRunning;
+            btnPlayPause.innerHTML = isRunning ? '⏸️ Pause' : '▶️ Play';
+        });
+
+        document.getElementById('simSpeed').addEventListener('change', (e) => {
+            simSpeed = parseInt(e.target.value);
+        });
+
+        // Simulation Loop
+        async function loop() {
+            if (isRunning) {
+                try {
+                    const t0 = performance.now();
+                    const res = await fetch(`/api/step?count=${simSpeed}`, {method: 'POST'});
+                    latestState = await res.json();
+                    const t1 = performance.now();
+                    statStep.innerText = `${latestState.step} ms (${Math.round(t1 - t0)}ms loop)`;
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+            if (latestState) {
+                renderArena(latestState);
+                updateTelemetry(latestState);
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        function updateTelemetry(st) {
+            const tel = st.telemetry;
+            statSpikes.innerText = tel.total_spikes.toLocaleString();
+            statFood.innerText = st.fly.food_eaten;
+
+            // Update Neuropil rate bars
+            for (const [reg, rate] of Object.entries(tel.regional_rates)) {
+                const elRate = document.getElementById(`rate-${reg}`);
+                const elFill = document.getElementById(`fill-${reg}`);
+                if (elRate && elFill) {
+                    elRate.innerText = `${rate.toFixed(1)} Hz`;
+                    const pct = Math.min(100, (rate / 60.0) * 100);
+                    elFill.style.width = `${pct}%`;
+                }
+            }
+
+            // Motor decoders
+            motSteer.innerText = (tel.motor.steer > 0 ? '+' : '') + tel.motor.steer.toFixed(2);
+            motSpeed.innerText = tel.motor.forward.toFixed(1);
+            motFeed.innerText = tel.motor.feeding.toFixed(3);
+            motEscape.innerText = tel.motor.escape.toFixed(3);
+            rasterRate.innerText = `${tel.total_spikes} spikes / step`;
+
+            // Raster history
+            rasterHistory.push(tel.active_sample || []);
+            if (rasterHistory.length > MAX_RASTER_COLS) {
+                rasterHistory.shift();
+            }
+            renderRaster();
+        }
+
+        function renderRaster() {
+            const w = rasterCanvas.width;
+            const h = rasterCanvas.height;
+            rCtx.fillStyle = '#070a12';
+            rCtx.fillRect(0, 0, w, h);
+
+            const colW = w / MAX_RASTER_COLS;
+            const maxNeurons = 139255;
+
+            for (let col = 0; col < rasterHistory.length; col++) {
+                const spikes = rasterHistory[col];
+                const x = col * colW;
+
+                for (let i = 0; i < spikes.length; i++) {
+                    const neuronIdx = spikes[i];
+                    const y = (neuronIdx / maxNeurons) * h;
+
+                    // Color code by region
+                    if (neuronIdx < 45000) rCtx.fillStyle = '#38bdf8'; // OL_L
+                    else if (neuronIdx < 90000) rCtx.fillStyle = '#60a5fa'; // OL_R
+                    else if (neuronIdx < 93500) rCtx.fillStyle = '#a855f7'; // AL
+                    else if (neuronIdx < 98500) rCtx.fillStyle = '#ec4899'; // MB
+                    else if (neuronIdx < 101700) rCtx.fillStyle = '#eab308'; // CX
+                    else if (neuronIdx < 108200) rCtx.fillStyle = '#10b981'; // SEZ
+                    else if (neuronIdx < 113200) rCtx.fillStyle = '#f97316'; // AMMC
+                    else if (neuronIdx < 137955) rCtx.fillStyle = '#94a3b8'; // CB
+                    else rCtx.fillStyle = '#ef4444'; // DN
+
+                    rCtx.fillRect(x, y, Math.max(1.5, colW - 0.5), 1.5);
+                }
+            }
+        }
+
+        function renderArena(st) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw subtle background grid
+            ctx.strokeStyle = '#121927';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            const env = st.environment;
+
+            // 1. Draw Lights
+            env.lights.forEach(l => {
+                const grad = ctx.createRadialGradient(l.x, l.y, 5, l.x, l.y, l.radius * 3.5);
+                grad.addColorStop(0, 'rgba(253, 224, 71, 0.45)');
+                grad.addColorStop(0.5, 'rgba(234, 179, 8, 0.15)');
+                grad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(l.x, l.y, l.radius * 3.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#fef08a';
+                ctx.beginPath();
+                ctx.arc(l.x, l.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#eab308';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#fef9c3';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('💡 Light', l.x - 18, l.y - 15);
+            });
+
+            // 2. Draw Food / Sugar Sources (with diffusing odor cloud)
+            env.foods.forEach(f => {
+                const grad = ctx.createRadialGradient(f.x, f.y, 4, f.x, f.y, f.radius * 3.0);
+                grad.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+                grad.addColorStop(0.6, 'rgba(16, 185, 129, 0.12)');
+                grad.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.radius * 3.0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#34d399';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#a7f3d0';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('🍬 Sugar', f.x - 18, f.y - 25);
+            });
+
+            // 3. Draw Poisons / Repellent
+            env.poisons.forEach(p => {
+                const grad = ctx.createRadialGradient(p.x, p.y, 4, p.x, p.y, p.radius * 2.5);
+                grad.addColorStop(0, 'rgba(168, 85, 247, 0.35)');
+                grad.addColorStop(1, 'rgba(168, 85, 247, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius * 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#7e22ce';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#c084fc';
+                ctx.stroke();
+
+                ctx.fillStyle = '#e9d5ff';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('🟣 Repellent', p.x - 24, p.y - 28);
+            });
+
+            // 4. Draw Obstacles
+            env.obstacles.forEach(ob => {
+                ctx.fillStyle = '#334155';
+                ctx.beginPath();
+                ctx.arc(ob.x, ob.y, ob.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.fillStyle = '#cbd5e1';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('🧱 Barrier', ob.x - 20, ob.y + 4);
+            });
+
+            // 5. Draw Motion Trail
+            const fly = st.fly;
+            if (fly.trail && fly.trail.length > 1) {
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.25)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(fly.trail[0].x, fly.trail[0].y);
+                for (let i = 1; i < fly.trail.length; i++) {
+                    ctx.lineTo(fly.trail[i].x, fly.trail[i].y);
+                }
+                ctx.stroke();
+            }
+
+            // 6. Draw Virtual Fly Body & Sensory Receptors
+            ctx.save();
+            ctx.translate(fly.x, fly.y);
+            ctx.rotate(fly.angle);
+
+            // Visual Sensory Cones (Left & Right Compound Eyes)
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
+            ctx.beginPath();
+            ctx.moveTo(0, -6);
+            ctx.arc(0, -6, 120, -1.2, 0.2);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 6);
+            ctx.arc(0, 6, 120, -0.2, 1.2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Fly Wings
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 1;
+            // Left Wing
+            ctx.beginPath();
+            ctx.ellipse(-10, -16, 16, 7, -0.4, 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+            // Right Wing
+            ctx.beginPath();
+            ctx.ellipse(-10, 16, 16, 7, 0.4, 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+
+            // Fly Abdomen & Thorax
+            ctx.fillStyle = '#475569';
+            ctx.beginPath();
+            ctx.ellipse(-8, 0, 14, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#64748b';
+            ctx.stroke();
+
+            // Fly Head
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.arc(8, 0, 7, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Compound Eyes (Left: Red/Orange, Right: Red/Orange)
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.arc(8, -6, 4, 0, Math.PI * 2); // Left eye
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(8, 6, 4, 0, Math.PI * 2); // Right eye
+            ctx.fill();
+
+            // Antennae (Olfactory sensors)
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(12, -3);
+            ctx.lineTo(18, -7);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(12, 3);
+            ctx.lineTo(18, 7);
+            ctx.stroke();
+
+            // Proboscis extension indicator if feeding
+            if (st.telemetry.motor.feeding > 0.08) {
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath();
+                ctx.arc(16, 0, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Direction arrow pointer
+            ctx.strokeStyle = '#00f0ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(10, 0);
+            ctx.lineTo(24, 0);
+            ctx.lineTo(18, -4);
+            ctx.moveTo(24, 0);
+            ctx.lineTo(18, 4);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Start animation loop
+        loop();
+    </script>
+</body>
+</html>
