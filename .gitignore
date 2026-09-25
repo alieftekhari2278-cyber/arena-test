@@ -22,3 +22,14 @@ dist/
 build/
 coverage/
 .cache/
+
+# FlyWire connectome data (hundreds of MB, rebuilt by flybrain/fetch_data.sh + build_graph.py)
+data/
+*.npz
+*.parquet
+*.csv.gz
+
+# packaged release bundle: flybrain-complete.zip is committed on purpose so it
+# has a GitHub download link; any other zip stays out
+*.zip
+!flybrain-complete.zip
