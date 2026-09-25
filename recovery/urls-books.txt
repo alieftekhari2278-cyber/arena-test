@@ -1,0 +1,16 @@
+# آدرس مستقیم کتاب‌های درسی — قابل استفاده با:  wget -i urls-books.txt
+# (نام‌گذاری فارسی را اسکریپت recover-archive.sh انجام می‌دهد)
+http://chap.sch.ir/sites/default/files/lbooks/1403-1404/40/C110210.pdf   # شیمی ۱ دهم
+http://chap.sch.ir/sites/default/files/lbooks/1403-1404/40/C110211.pdf   # ریاضی ۱ دهم
+http://chap.sch.ir/sites/default/files/lbooks/1403-1404/40/C110216.pdf   # زیست ۱ دهم
+https://physicfa.ir/wp-content/uploads/2024/12/Physic1T-1403-1404-physicfa.pdf  # فیزیک ۱ دهم (۱۴۰۳ - آینه)
+http://chap.sch.ir/sites/default/files/lbooks/1404-1405/40/C110214.pdf   # پشتیبان فیزیک ۱ دهم (۱۴۰۴)
+http://chap.sch.ir/sites/default/files/lbooks/1404-1405/41/C111210.pdf   # شیمی ۲ یازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1404-1405/41/C111211.pdf   # ریاضی ۲ یازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1404-1405/41/C111216.pdf   # زیست ۲ یازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1404-1405/41/C111237.pdf   # زمین‌شناسی یازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1404-1405/41/C111244.pdf   # فیزیک ۲ یازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1405-1406/712/C112210.pdf  # شیمی ۳ دوازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1405-1406/712/C112211.pdf  # ریاضی ۳ دوازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1405-1406/712/C112216.pdf  # زیست ۳ دوازدهم
+http://chap.sch.ir/sites/default/files/lbooks/1405-1406/712/C112244.pdf  # فیزیک ۳ دوازدهم
