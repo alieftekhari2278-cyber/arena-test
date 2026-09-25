@@ -22,3 +22,9 @@ dist/
 build/
 coverage/
 .cache/
+
+# آرشیو دانلودها (هرگز داخل Git نرود — حجیم و قابل بازسازی است)
+download/
+*.pdf
+*.pdf.part
+tools/bazyabi/**/bazyabi.log
