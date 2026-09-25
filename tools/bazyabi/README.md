@@ -82,3 +82,12 @@ bash tools/bazyabi/tests/run_tests.sh
 اگر شبکه به `chap.sch.ir` / `konkur.in` دسترسی نداشته باشد (فیلترینگ یا allowlist)،
 هیچ‌کدام از مسیرها جواب نمی‌دهد. در آن حالت اسکریپت به‌درستی «ناموفق» گزارش می‌دهد
 و چیزی از خود نمی‌سازد — اسکریپت را روی شبکه‌ای با دسترسی اجرا کنید.
+
+## CI
+
+تعریف workflow در `docs/ci/tests.yml` آماده است (shellcheck + تست آفلاین).
+برای فعال‌سازی:
+
+```bash
+mkdir -p .github/workflows && cp docs/ci/tests.yml .github/workflows/tests.yml
+```
