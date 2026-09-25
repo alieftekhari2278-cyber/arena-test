@@ -75,5 +75,18 @@ echo "» حالت DRY_RUN"
 DRY_RUN=1 DOWNLOAD_ROOT="$TMP/dry" bash "$ROOT/bazyabi.sh" kotob >/dev/null 2>&1
 check "بدون فایل در DRY_RUN" 0 "$(find "$TMP/dry" -name '*.pdf' 2>/dev/null | wc -l)"
 
+echo "» تطابق نسخه پایتون (چندسکویی) با نسخه bash"
+PYROOT="$TMP/pydl"
+CHAP_BASE="http://127.0.0.1:$PORT" KONKUR_BASE="http://127.0.0.1:$PORT" \
+  DL_HOST="127.0.0.1:$PORT" USE_WAYBACK=0 TRIES=1 MIN_SIZE=10000 \
+  python3 "$ROOT/bazyabi.py" all --root "$PYROOT" >/dev/null 2>&1
+for d in "kotob-darsi" "konkur-fizik"; do
+  a=$(find "$DOWNLOAD_ROOT/$d" -name '*.pdf' | wc -l)
+  b=$(find "$PYROOT/$d" -name '*.pdf' 2>/dev/null | wc -l)
+  check "$d برابر در هر دو نسخه" "$a" "$b"
+done
+[ -f "$PYROOT/nahayi-fizik12/خرداد-1404-فیزیک3-تجربی.pdf" ] \
+  && echo "  ✔ نام‌گذاری فارسی در نسخه پایتون" || { echo "  ✘ نام‌گذاری پایتون"; FAIL=1; }
+
 echo
 [ "$FAIL" = 0 ] && { echo "✅ همه تست‌ها سبز"; exit 0; } || { echo "❌ تست‌ها شکست خوردند"; sed -n '1,60p' "$TMP/out.txt"; exit 1; }
