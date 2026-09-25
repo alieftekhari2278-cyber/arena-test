@@ -25,8 +25,11 @@ NAHAYI_FILES = [
     "Shahrivar-02-Fizik3T-%5Bwww.konkur.in%5D.pdf",
     "Tir-05-Fizik3T-%5Bwww.konkur.in%5D.pdf",
     "Khordad-97-Fizik3T-%5Bwww.konkur.in%5D.pdf",
+    # سبک سال چهاررقمی — شکل واقعی تأییدشده روی dl.konkur.in
+    "Shahrivar-1404-Fizik3T-%5Bwww.konkur.in%5D.pdf",
     "Khordad-04-Fizik3R-%5Bwww.konkur.in%5D.pdf",
     "Dey-03-Fizik3R-%5Bwww.konkur.in%5D.pdf",
+    "Dey-1405-Fizik3R-%5Bkonkur.in%5D.pdf",
 ]
 
 KONKUR_FILES = {
@@ -42,6 +45,10 @@ for pid in ("117416", "119129", "109465", "111823", "101624", "104737", "96826",
                          f"Konkur14{yy}-Tajrobi-Key-%5Bwww.konkur.in%5D.pdf",
                          f"Konkur14{yy}-Fizik-A-%5Bwww.konkur.in%5D.pdf",
                          f"Konkur14{yy}-Fizik-B-%5Bwww.konkur.in%5D.pdf"]
+
+
+ZIP_FILES = ["Fizik3-Tajrobi-Archive-%5Bwww.konkur.in%5D.zip",
+             "Fizik3-Riazi-Archive-%5Bwww.konkur.in%5D.zip"]
 
 
 def page_html(files):
@@ -71,11 +78,17 @@ class H(BaseHTTPRequestHandler):
             return self._send(fake_pdf(code=m.group(1)), "application/pdf")
         if p.startswith("/dl/") and p.endswith(".pdf"):
             return self._send(fake_pdf(), "application/pdf")
+        if p.startswith("/dl/") and p.endswith(".zip"):
+            import io, zipfile
+            buf = io.BytesIO()
+            with zipfile.ZipFile(buf, "w") as z:
+                z.writestr("Khordad-1404-Fizik3T.pdf", fake_pdf())
+            return self._send(buf.getvalue(), "application/zip")
         m = re.match(r"^/(\d+)/?$", p)
         if m:
             pid = m.group(1)
             if pid == "89691":
-                return self._send(page_html(NAHAYI_FILES), "text/html; charset=utf-8")
+                return self._send(page_html(NAHAYI_FILES + ZIP_FILES), "text/html; charset=utf-8")
             if pid in KONKUR_FILES:
                 return self._send(page_html(KONKUR_FILES[pid]), "text/html; charset=utf-8")
         self.send_error(404)

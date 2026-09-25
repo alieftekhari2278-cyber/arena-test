@@ -61,10 +61,33 @@ cmd_kotob() {
 }
 
 # ---------- استخراج لینک PDF از یک صفحه ----------
-scrape_pdfs() { # scrape_pdfs <page_url>
+scrape_files() { # scrape_files <page_url> <ext>  مثلا pdf یا zip
+  local ext="${2:-pdf}"
   _curl "$1" 2>/dev/null |
-    grep -oE "https?://$DL_HOST_RE/[^\"'<>[:space:]]+\.[Pp][Dd][Ff]" |
+    grep -oiE "https?://$DL_HOST_RE/[^\"'<>[:space:]]+\.$ext" |
     sed 's/&amp;/\&/g' | awk '!seen[$0]++'
+}
+scrape_pdfs() { scrape_files "$1" pdf; }
+
+# دانلود آرشیو فشرده «همه سال‌ها یکجا» — میان‌بر مطمئن‌تر از تک‌تک PDFها
+fetch_zips() { # fetch_zips <page_url> <dest_dir>
+  local page="$1" dest="$2" u out n=0
+  mkdir -p "$dest"
+  while read -r u; do
+    [ -n "$u" ] || continue
+    out="$dest/$(basename "${u%%\?*}")"
+    n=$((n + 1))
+    if [ "$DRY_RUN" = "1" ]; then dim "[DRY] zip: $u"; continue; fi
+    if _curl -o "$out" "$u" && [ -s "$out" ]; then
+      ok "آرشیو فشرده: $(basename "$out") ($(wc -c <"$out") بایت)"
+      report_row "آرشیو-zip" "$(basename "$out")" "OK" "$(wc -c <"$out")" "-" "$u"
+      have unzip && unzip -qo "$out" -d "${out%.zip}" && dim "استخراج شد در ${out%.zip}"
+    else
+      rm -f "$out"; err "آرشیو فشرده ناموفق: $u"
+      report_row "آرشیو-zip" "$(basename "$out")" "ناموفق" "0" "-" "$u"
+    fi
+  done < <(scrape_files "$page" zip)
+  [ "$n" -gt 0 ] || dim "آرشیو فشرده‌ای در این صفحه نبود"
 }
 
 # ---------- گام ۳: امتحان نهایی فیزیک ۳ (بخش B) ----------
@@ -73,6 +96,9 @@ cmd_nahayi() {
   local page_url u name out n_t=0 n_r=0
   page_url="$KONKUR_BASE/89691/"
   log "استخراج لینک‌ها از صفحه آرشیو نهایی فیزیک ۳ …"
+  # میان‌بر: آرشیوهای ZIP «همه سال‌ها یکجا» (تجربی ~۱۱.۶MB ، ریاضی ~۸.۲MB)
+  fetch_zips "$page_url" "$DIR_NAHAYI/آرشیو-فشرده"
+
   local links; links=$(scrape_pdfs "$page_url")
   if [ -z "$links" ]; then err "هیچ لینکی از صفحه ۸۹۶۹۱ استخراج نشد (فیلترینگ یا تغییر ساختار صفحه)"; return 1; fi
 

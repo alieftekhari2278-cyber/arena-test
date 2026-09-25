@@ -157,10 +157,15 @@ month_fa() {
   esac
 }
 
-# YY دو رقمی → سال کامل شمسی (97→1397 ، 04→1404)
+# سال → سال کامل شمسی. هم دو رقمی (97→1397 ، 04→1404)
+# هم چهار رقمی که همان‌طور برمی‌گردد (1404→1404).
+# توجه: konkur.in هر دو شکل را به‌کار می‌برد:
+#   Khordad-04-Fizik3T-...  و  Khordad-1404-Fizik3T-...
 year_fa() {
-  local yy="${1#0}"; [ -z "$yy" ] && yy=0
-  if [ "$yy" -ge 90 ]; then echo "13$1"; else printf '14%02d' "$yy"; fi
+  local y="$1"
+  if [ "${#y}" -ge 4 ]; then printf '%s' "$y"; return; fi
+  local yy="${y#0}"; [ -z "$yy" ] && yy=0
+  if [ "$yy" -ge 90 ]; then echo "13$y"; else printf '14%02d' "$yy"; fi
 }
 
 # رشته از نام فایل مبدأ: Fizik3T→تجربی ، Fizik3R→ریاضی
@@ -174,13 +179,14 @@ branch_fa() {
 
 # نام فارسی فایل نهایی از URL مبدأ
 nahayi_name() {
-  local url="$1" base m yy br
+  local url="$1" base m y br
   base=$(basename "${url%%\?*}")
   m=$(printf '%s' "$base" | grep -oiE '^(khordad|dey|shahrivar|tir|mordad)' | head -1)
-  yy=$(printf '%s' "$base" | grep -oE '^[A-Za-z]+-([0-9]{2})' | grep -oE '[0-9]{2}$' | head -1)
+  # سال ممکن است ۲ یا ۴ رقمی باشد — هر دو شکل روی dl.konkur.in دیده شده است
+  y=$(printf '%s' "$base" | sed -nE 's/^[A-Za-z]+-([0-9]{2,4}).*/\1/p' | head -1)
   br=$(branch_fa "$base")
-  if [ -n "$m" ] && [ -n "$yy" ] && [ -n "$br" ]; then
-    printf '%s-%s-فیزیک3-%s.pdf' "$(month_fa "$m")" "$(year_fa "$yy")" "$br"
+  if [ -n "$m" ] && [ -n "$y" ] && [ -n "$br" ]; then
+    printf '%s-%s-فیزیک3-%s.pdf' "$(month_fa "$m")" "$(year_fa "$y")" "$br"
   else
     printf '%s' "$base"
   fi
