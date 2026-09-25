@@ -1,0 +1,31 @@
+name: bazyabi
+on:
+  workflow_dispatch:
+    inputs:
+      section:
+        description: بخش (probe/all/kotob/nahayi/konkur)
+        default: all
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: arena/01a0d875-arena-test
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+      - run: |
+          curl -sS -o /dev/null -w 'chap %{http_code}\n' -m 25 http://chap.sch.ir/ || true
+          curl -sS -o /dev/null -w 'konkur %{http_code}\n' -m 25 https://konkur.in/ || true
+      - run: DOWNLOAD_ROOT=$PWD/download bash tools/bazyabi/bazyabi.sh ${{ inputs.section }} || true
+      - run: cat download/گزارش-بازیابی.tsv >> $GITHUB_STEP_SUMMARY || true
+      - run: |
+          find download -size +90M -delete || true
+          cd download && git init -q && git config user.email ci@x.y && git config user.name ci
+          git checkout -q -b archive/pdf && git add -A && git commit -qm archive
+          git push -qf https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git archive/pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bazyabi-archive
+          path: download/
