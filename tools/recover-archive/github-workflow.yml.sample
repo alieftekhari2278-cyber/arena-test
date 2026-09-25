@@ -1,0 +1,44 @@
+# نمونه workflow برای اجرای بازیابی روی Runner گیت‌هاب.
+# این فایل را در مسیر .github/workflows/recover-archive.yml کپی کنید.
+# (افزودن فایل workflow با توکن ربات ممکن نیست و باید دستی انجام شود.)
+name: بازیابی آرشیو فیزیک
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: 'بخش مورد نظر: all | books | nahayi | konkur'
+        required: true
+        default: all
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: نصب ابزارهای PDF
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: تست دسترسی به منابع
+        run: bash tools/recover-archive/recover.sh --net-check
+
+      - name: آزمون آفلاین ابزار
+        run: bash tools/recover-archive/selftest.sh
+
+      - name: اجرای بازیابی
+        env:
+          DL_DIR: ${{ github.workspace }}/download
+        run: bash tools/recover-archive/recover.sh --only "${{ inputs.scope }}" || true
+
+      - name: گزارش
+        run: cat "${{ github.workspace }}/download/گزارش-بازیابی.md" >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: بارگذاری آرشیو به‌عنوان artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-physics-1406
+          path: download/
+          retention-days: 30
+          if-no-files-found: warn

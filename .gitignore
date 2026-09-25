@@ -22,3 +22,6 @@ dist/
 build/
 coverage/
 .cache/
+
+# آرشیو دانلود شده (فایل‌های حجیم؛ با tools/recover-archive/recover.sh بازسازی می‌شود)
+download/
