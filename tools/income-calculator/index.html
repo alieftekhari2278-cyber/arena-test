@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ماشین‌حساب درآمد واقعی فریلنسر ایرانی</title>
+    <meta
+      name="description"
+      content="محاسبه درآمد خالص تومانی یک طراح سایت ایرانی از پروژه‌های خارجی، با احتساب کارمزد پلتفرم، هزینه نقد کردن ارز و هزینه ابزارها."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../index.html">arena-test</a>
+      <nav class="nav" aria-label="ناوبری">
+        <a href="../../docs/README.md">پرونده تحقیقی</a>
+        <a href="../../docs/market-prices.md">جدول قیمت‌ها</a>
+      </nav>
+    </header>
+
+    <main class="main" id="main-content">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">ابزار شماره ۱</p>
+        <h1 id="page-title">از «قیمت پروژه» تا «تومانی که واقعاً به حسابت می‌نشیند»</h1>
+        <p class="lead">
+          فاصله بین مبلغ فاکتور و پول توی جیب، همان کارمزد پلتفرم، هزینه نقد کردن ارز و
+          هزینه ابزارهاست. این ماشین‌حساب همان فاصله را نشان می‌دهد. همه چیز در مرورگر
+          خودتان محاسبه می‌شود و هیچ داده‌ای جایی ارسال نمی‌شود.
+        </p>
+      </section>
+
+      <div class="layout">
+        <section class="panel" aria-labelledby="inputs-title">
+          <h2 id="inputs-title">ورودی‌ها</h2>
+
+          <fieldset class="field">
+            <legend>مدل درآمد</legend>
+            <div class="segmented" role="group">
+              <label class="seg">
+                <input type="radio" name="mode" value="hourly" checked />
+                <span>ساعتی</span>
+              </label>
+              <label class="seg">
+                <input type="radio" name="mode" value="project" />
+                <span>پروژه‌ای</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div id="hourly-fields">
+            <label class="field">
+              <span>نرخ ساعتی (دلار)</span>
+              <input id="rate" type="number" min="0" step="1" value="25" />
+              <small>میانه بازار توسعه وب در آپ‌ورک: ۲۵ دلار · صدک ۹۰: ۵۸ دلار</small>
+            </label>
+            <label class="field">
+              <span>ساعت کار قابل فاکتور در ماه</span>
+              <input id="hours" type="number" min="0" step="1" value="60" />
+              <small>واقع‌بینانه: ۵۰ تا ۷۰٪ ساعات کاری قابل فاکتور است.</small>
+            </label>
+          </div>
+
+          <div id="project-fields" hidden>
+            <label class="field">
+              <span>قیمت هر پروژه (دلار)</span>
+              <input id="price" type="number" min="0" step="10" value="800" />
+              <small>سایت شرکتی: فایور ۲۱۳ تا ۲۵۹ · مستقیم ۲٬۰۰۰ تا ۸٬۰۰۰ دلار</small>
+            </label>
+            <label class="field">
+              <span>تعداد پروژه در ماه</span>
+              <input id="count" type="number" min="0" step="1" value="2" />
+            </label>
+            <label class="field">
+              <span>ساعت صرف‌شده برای هر پروژه (اختیاری)</span>
+              <input id="projectHours" type="number" min="0" step="1" value="35" />
+              <small>برای محاسبه نرخ ساعتی مؤثر استفاده می‌شود.</small>
+            </label>
+          </div>
+
+          <fieldset class="field">
+            <legend>کارمزد پلتفرم</legend>
+            <div class="presets" role="group" aria-label="پیش‌فرض‌های کارمزد">
+              <button type="button" class="chip" data-fee="0">مشتری مستقیم ۰٪</button>
+              <button type="button" class="chip" data-fee="10">آپ‌ورک ۱۰٪</button>
+              <button type="button" class="chip" data-fee="20">فایور ۲۰٪</button>
+              <button type="button" class="chip" data-fee="10">LaborX ۱۰٪</button>
+            </div>
+            <input id="platformFee" type="number" min="0" max="50" step="0.5" value="0" />
+          </fieldset>
+
+          <label class="field">
+            <span>هزینه نقد کردن ارز (٪)</span>
+            <input id="cashoutFee" type="number" min="0" max="40" step="0.5" value="8" />
+            <small>
+              تتر مستقیم: ۱ تا ۳٪ · حواله صرافی: ۱ تا ۳٪ · واسط‌های پرداخت: ۵ تا ۲۰٪
+            </small>
+          </label>
+
+          <label class="field">
+            <span>هزینه ثابت ماهانه ابزارها (دلار)</span>
+            <input id="tools" type="number" min="0" step="5" value="60" />
+            <small>هاست، دامنه، VPS، فیگما، اشتراک‌های AI — معمولاً با مارک‌آپ واسط.</small>
+          </label>
+
+          <label class="field">
+            <span>نرخ تبدیل دلار به تومان</span>
+            <input id="usdRate" type="number" min="1000" step="100" value="235800" />
+            <small>پیش‌فرض: دلار آزاد ۲ مهر ۱۴۰۵. نرخ روز را جایگزین کنید.</small>
+          </label>
+
+          <button type="button" id="reset" class="reset">بازگشت به مقادیر پیش‌فرض</button>
+        </section>
+
+        <section class="panel results" aria-labelledby="results-title" aria-live="polite">
+          <h2 id="results-title">نتیجه ماهانه</h2>
+
+          <p class="headline" id="netToman">—</p>
+          <p class="headline-sub" id="netUsd">—</p>
+
+          <table class="breakdown">
+            <caption class="sr-only">تفکیک درآمد و کسورات</caption>
+            <tbody>
+              <tr>
+                <th scope="row">درآمد ناخالص</th>
+                <td id="gross">—</td>
+              </tr>
+              <tr class="minus">
+                <th scope="row">کارمزد پلتفرم</th>
+                <td id="feeAmount">—</td>
+              </tr>
+              <tr class="minus">
+                <th scope="row">هزینه نقد کردن</th>
+                <td id="cashoutAmount">—</td>
+              </tr>
+              <tr class="minus">
+                <th scope="row">هزینه ابزارها</th>
+                <td id="toolsAmount">—</td>
+              </tr>
+              <tr class="total">
+                <th scope="row">خالص دلاری</th>
+                <td id="netUsdRow">—</td>
+              </tr>
+              <tr>
+                <th scope="row">نرخ ساعتی مؤثر</th>
+                <td id="effective">—</td>
+              </tr>
+              <tr>
+                <th scope="row">اتلاف کل (کارمزدها)</th>
+                <td id="leak">—</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="compare">
+            <h3>مقایسه با بازار کار داخلی</h3>
+            <p id="benchmark">—</p>
+            <ul class="bench-list">
+              <li>میانگین توسعه‌دهنده ۳ تا ۷ سال سابقه: حدود ۴۲ میلیون تومان در ماه</li>
+              <li>سینیور در ۱۴۰۵: از حدود ۱۱۰ میلیون تومان در ماه</li>
+            </ul>
+          </div>
+
+          <div class="reverse">
+            <h3>محاسبه معکوس</h3>
+            <label class="field">
+              <span>می‌خواهم ماهانه این مقدار تومان خالص بگیرم</span>
+              <input id="targetToman" type="number" min="0" step="10000000" value="300000000" />
+            </label>
+            <p id="reverseResult" class="reverse-out">—</p>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel notes">
+        <h2>سه نکته درباره این اعداد</h2>
+        <ul>
+          <li>
+            این ابزار <strong>مالیات</strong> را محاسبه نمی‌کند. درآمد صادرات خدمات طبق
+            ماده ۱۴۱ مشمول نرخ صفر است، اما مشروط به اظهارنامه و رفع تعهد ارزی
+            (<a href="../../docs/obstacles-and-solutions.md">جزئیات</a>).
+          </li>
+          <li>
+            «هزینه نقد کردن» را حدس نزنید؛ یک بار با مبلغ کوچک تست کنید و نرخ مؤثر
+            واقعی خودتان را وارد کنید.
+          </li>
+          <li>
+            نرخ دلار در این اعداد بزرگ‌ترین متغیر است. با تغییر ۱۰٪ نرخ ارز، همه ارقام
+            تومانی ۱۰٪ جابه‌جا می‌شوند.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        بخشی از پرونده تحقیقی «درآمد ارزی برای طراح سایت ایرانی» — داده‌های مبنا: مهر ۱۴۰۵
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
