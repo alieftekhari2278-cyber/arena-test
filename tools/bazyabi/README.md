@@ -77,6 +77,34 @@ bash tools/bazyabi/tests/run_tests.sh
 تست‌ها پوشش می‌دهند: شمار فایل هر دسته، نام‌گذاری فارسی ماه/سال/رشته،
 سقف ۲ فایل تشریحی در هر دورهٔ کنکور، تشخیص فایل خراب، گزارش TSV و حالت `DRY_RUN`.
 
+## 🚀 دانلود از راه GitHub Actions (وقتی شبکهٔ محلی بسته است)
+
+رانرهای GitHub اینترنت آزاد دارند. اگر محیط شما به `chap.sch.ir` / `konkur.in` نمی‌رسد،
+بگذارید رانر دانلود کند و نتیجه را از GitHub بردارید:
+
+**۱) فعال‌سازی workflow** (یک‌بار — عامل Arena مجوز ساخت workflow ندارد):
+
+```bash
+mkdir -p .github/workflows
+cp docs/ci/bazyabi-download.yml .github/workflows/bazyabi-download.yml
+git add .github/workflows && git commit -m "افزودن workflow بازیابی" && git push
+```
+
+> `workflow_dispatch` فقط وقتی در تب Actions دیده می‌شود که فایل روی **شاخهٔ پیش‌فرض (main)** باشد.
+
+**۲) اجرا:** تب **Actions** ← «بازیابی آرشیو» ← **Run workflow**
+— بار اول با گزینهٔ `probe` (حدود ۳۰ ثانیه) تا مطمئن شوید رانر به منابع می‌رسد، بعد با `all`.
+
+**۳) برداشت نتیجه:** خروجی هم `artifact` است و هم روی شاخهٔ `archive/pdf` push می‌شود:
+
+```bash
+tools/bazyabi/fetch-archive.sh          # شاخه archive/pdf را می‌گیرد و در DOWNLOAD_ROOT می‌چیند
+```
+
+شاخهٔ `archive/pdf` با `git clone --depth 1` برداشت می‌شود، پس در محیط‌هایی که فقط
+`github.com` برایشان باز است هم کار می‌کند (برخلاف artifactها که از
+`objects.githubusercontent.com` سرو می‌شوند).
+
 ## محدودیت شناخته‌شده
 
 اگر شبکه به `chap.sch.ir` / `konkur.in` دسترسی نداشته باشد (فیلترینگ یا allowlist)،

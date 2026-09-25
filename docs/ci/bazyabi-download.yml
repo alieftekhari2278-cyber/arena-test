@@ -1,0 +1,105 @@
+name: بازیابی آرشیو (دانلود روی رانر GitHub)
+
+# رانرهای GitHub اینترنت آزاد دارند، پس می‌توانند فایل‌هایی را بگیرند که
+# محیط‌های محدود نمی‌توانند. خروجی هم به‌صورت artifact و هم روی شاخهٔ
+# archive/pdf منتشر می‌شود تا از هر جایی با git قابل برداشت باشد.
+
+on:
+  workflow_dispatch:
+    inputs:
+      section:
+        description: "کدام بخش؟"
+        type: choice
+        default: all
+        options: [probe, all, kotob, nahayi, konkur]
+      publish_branch:
+        description: "نتیجه روی شاخه archive/pdf هم push شود؟"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  bazyabi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: نصب ابزارها
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      # --- گام تشخیصی: آیا رانر اصلاً به این سایت‌ها می‌رسد؟ ---
+      - name: probe — بررسی دسترسی به منابع
+        id: probe
+        run: |
+          fail=0
+          for u in http://chap.sch.ir/ https://konkur.in/ https://dl.konkur.in/ \
+                   https://physicfa.ir/ https://web.archive.org/; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 25 \
+                   -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "$u" 2>/dev/null || echo 000)
+            printf '%-32s %s\n' "$u" "$code" | tee -a "$GITHUB_STEP_SUMMARY"
+            [ "$code" = "000" ] && fail=$((fail+1))
+          done
+          echo "unreachable=$fail" >> "$GITHUB_OUTPUT"
+          if [ "$fail" -gt 0 ]; then
+            echo "::warning::$fail منبع از رانر GitHub در دسترس نیست (احتمالاً geo-block ایران)"
+          fi
+
+      - name: اجرای بازیابی
+        if: inputs.section != 'probe'
+        env:
+          DOWNLOAD_ROOT: ${{ github.workspace }}/download
+          TRIES: "4"
+          USE_WAYBACK: "1"
+        run: |
+          chmod +x tools/bazyabi/bazyabi.sh
+          tools/bazyabi/bazyabi.sh "${{ inputs.section }}" || true
+          tools/bazyabi/bazyabi.sh report | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: خلاصه گزارش
+        if: always()
+        run: |
+          f="${{ github.workspace }}/download/گزارش-بازیابی.tsv"
+          [ -f "$f" ] || exit 0
+          { echo '### گزارش سطر‌به‌سطر'; echo; echo '```'; cat "$f"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: حذف فایل‌های بزرگ‌تر از ۹۰ مگابایت (سقف Git)
+        if: always()
+        run: find download -type f -size +90M -print -delete 2>/dev/null || true
+
+      - name: آپلود به‌عنوان artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazyabi-archive
+          path: download/
+          if-no-files-found: warn
+          retention-days: 30
+
+      # --- انتشار روی شاخه archive/pdf تا با git قابل برداشت باشد ---
+      - name: push روی شاخه archive/pdf
+        if: always() && inputs.publish_branch
+        run: |
+          cd download || exit 0
+          [ -n "$(find . -name '*.pdf' -print -quit)" ] || { echo "فایلی برای انتشار نیست"; exit 0; }
+          git init -q
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b archive/pdf
+          printf '%s\n' '*.part' 'bazyabi.log' > .gitignore
+          git add -A
+          git commit -qm "آرشیو بازیابی‌شده — اجرای ${{ github.run_number }} ($(date -u +%F))"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            archive/pdf
+          echo "✅ روی شاخه archive/pdf منتشر شد" >> "$GITHUB_STEP_SUMMARY"
+
+# ── فعال‌سازی ────────────────────────────────────────────────────────
+# این فایل بیرون از .github/workflows نگه داشته شده، چون توکن نشست عامل
+# Arena مجوز ساخت workflow ندارد. برای فعال‌سازی:
+#   mkdir -p .github/workflows
+#   cp docs/ci/bazyabi-download.yml .github/workflows/bazyabi-download.yml
+#   git add .github/workflows && git commit -m "افزودن workflow بازیابی" && git push
+# سپس در تب Actions روی «Run workflow» بزنید (اول با گزینه probe).
