@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فروشگاه ساعت | زمانا</title>
+<meta name="description" content="خرید انواع ساعت مچی مردانه، زنانه، اسپرت، لاکچری و هوشمند با فیلتر قیمت، برند و مرتب‌سازی.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header data-site-header></header>
+
+<main class="container">
+  <nav class="crumbs"><a href="index.html">خانه</a> / <span data-crumb>فروشگاه</span></nav>
+
+  <div class="shop">
+    <aside class="filters">
+      <h4>دسته‌بندی</h4>
+      <div data-cats></div>
+
+      <h4>برند</h4>
+      <div data-brands></div>
+
+      <h4>حداکثر قیمت</h4>
+      <input type="range" id="priceRange" min="15000000" max="70000000" step="1000000" value="70000000">
+      <div class="muted" style="font-size:.85rem">تا <span data-price-label></span></div>
+
+      <h4>امکانات</h4>
+      <label><input type="checkbox" data-only-discount> فقط تخفیف‌دارها</label>
+      <label><input type="checkbox" data-only-stock> فقط موجودها</label>
+
+      <button class="btn btn--ghost btn--block btn--sm" style="margin-top:1.2rem" data-reset>حذف فیلترها</button>
+    </aside>
+
+    <section>
+      <div class="shop__toolbar">
+        <div><b data-count>۰</b> <span class="muted">محصول یافت شد</span></div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <input type="search" data-q placeholder="جستجو در نتایج...">
+          <select data-sort>
+            <option value="pop">محبوب‌ترین</option>
+            <option value="new">جدیدترین</option>
+            <option value="cheap">ارزان‌ترین</option>
+            <option value="exp">گران‌ترین</option>
+            <option value="rate">بالاترین امتیاز</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid--shop" data-results></div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer" data-site-footer></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.Store, P = window.PRODUCTS;
+  var state = {
+    cat: S.qs('cat') || 'all',
+    q: S.qs('q') || '',
+    brands: [],
+    max: 70000000,
+    sort: 'pop',
+    discount: false,
+    stock: false
+  };
+
+  var catsBox = document.querySelector('[data-cats]');
+  catsBox.innerHTML = window.CATEGORIES.map(function (c) {
+    return '<label><input type="radio" name="cat" value="' + c.key + '"' + (c.key === state.cat ? ' checked' : '') + '> ' + c.label + '</label>';
+  }).join('');
+
+  var brands = P.map(function (p) { return p.brand; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
+  document.querySelector('[data-brands]').innerHTML = brands.map(function (b) {
+    return '<label><input type="checkbox" value="' + b + '" data-brand> ' + b + '</label>';
+  }).join('');
+
+  var qInput = document.querySelector('[data-q]');
+  qInput.value = state.q;
+
+  function render() {
+    var list = P.filter(function (p) {
+      if (state.cat !== 'all' && p.category !== state.cat) return false;
+      if (state.brands.length && state.brands.indexOf(p.brand) === -1) return false;
+      if (p.price > state.max) return false;
+      if (state.discount && !p.oldPrice) return false;
+      if (state.stock && p.stock <= 0) return false;
+      if (state.q) {
+        var hay = (p.name + ' ' + p.brand + ' ' + p.tags.join(' ')).toLowerCase();
+        if (hay.indexOf(state.q.toLowerCase()) === -1) return false;
+      }
+      return true;
+    });
+
+    var sorters = {
+      pop: function (a, b) { return b.reviews - a.reviews; },
+      new: function (a, b) { return P.indexOf(b) - P.indexOf(a); },
+      cheap: function (a, b) { return a.price - b.price; },
+      exp: function (a, b) { return b.price - a.price; },
+      rate: function (a, b) { return b.rating - a.rating; }
+    };
+    list.sort(sorters[state.sort]);
+
+    document.querySelector('[data-count]').textContent = S.toFa(list.length);
+    document.querySelector('[data-price-label]').textContent = S.price(state.max);
+    document.querySelector('[data-results]').innerHTML = list.length
+      ? list.map(S.productCard).join('')
+      : '<div class="empty">محصولی با این فیلترها پیدا نشد. فیلترها را تغییر دهید.</div>';
+
+    var catLabel = window.CATEGORIES.filter(function (c) { return c.key === state.cat; })[0];
+    document.querySelector('[data-crumb]').textContent = catLabel ? catLabel.label : 'فروشگاه';
+  }
+
+  catsBox.addEventListener('change', function (e) { state.cat = e.target.value; render(); });
+  document.querySelector('[data-brands]').addEventListener('change', function () {
+    state.brands = [].slice.call(document.querySelectorAll('[data-brand]:checked')).map(function (i) { return i.value; });
+    render();
+  });
+  document.getElementById('priceRange').addEventListener('input', function (e) { state.max = +e.target.value; render(); });
+  document.querySelector('[data-sort]').addEventListener('change', function (e) { state.sort = e.target.value; render(); });
+  qInput.addEventListener('input', function (e) { state.q = e.target.value; render(); });
+  document.querySelector('[data-only-discount]').addEventListener('change', function (e) { state.discount = e.target.checked; render(); });
+  document.querySelector('[data-only-stock]').addEventListener('change', function (e) { state.stock = e.target.checked; render(); });
+  document.querySelector('[data-reset]').addEventListener('click', function () {
+    state = { cat: 'all', q: '', brands: [], max: 70000000, sort: 'pop', discount: false, stock: false };
+    document.querySelectorAll('.filters input').forEach(function (i) {
+      if (i.type === 'checkbox') i.checked = false;
+      if (i.type === 'range') i.value = 70000000;
+      if (i.type === 'radio') i.checked = i.value === 'all';
+    });
+    qInput.value = '';
+    document.querySelector('[data-sort]').value = 'pop';
+    render();
+  });
+
+  render();
+});
+</script>
+</body>
+</html>

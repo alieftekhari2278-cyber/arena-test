@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سبد خرید | زمانا</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header data-site-header></header>
+
+<main class="container">
+  <nav class="crumbs"><a href="index.html">خانه</a> / <span>سبد خرید</span></nav>
+  <h1 style="font-size:1.6rem">سبد خرید شما</h1>
+  <div class="cart" style="margin:1.2rem 0 2rem">
+    <div data-cart-area></div>
+    <aside class="summary" data-summary></aside>
+  </div>
+</main>
+
+<footer class="footer" data-site-footer></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.Store;
+  var COUPONS = { ZAMANA10: 0.10, WATCH5: 0.05 };
+  var coupon = sessionStorage.getItem('zamana_coupon') || '';
+
+  function discountRate() { return COUPONS[coupon] || 0; }
+
+  function render() {
+    var rows = S.cartDetailed();
+    var area = document.querySelector('[data-cart-area]');
+    var sum = document.querySelector('[data-summary]');
+
+    if (!rows.length) {
+      area.innerHTML = '<div class="empty">سبد خرید شما خالی است.<br><br><a class="btn btn--primary" href="shop.html">رفتن به فروشگاه</a></div>';
+      sum.innerHTML = '<h3>خلاصه سفارش</h3><p class="muted">ابتدا محصولی به سبد اضافه کنید.</p>';
+      return;
+    }
+
+    area.innerHTML = '<div class="cart__list">' + rows.map(function (r) {
+      return '<div class="cart__row">' +
+        '<img src="' + r.product.image + '" alt="' + r.product.name + '">' +
+        '<div><h3><a href="product.html?id=' + r.product.id + '">' + r.product.name + '</a></h3>' +
+        '<small class="muted">' + r.product.brand + ' · ' + S.price(r.product.price) + '</small><br>' +
+        '<button class="link-danger" data-remove="' + r.product.id + '">حذف</button></div>' +
+        '<div class="qty"><button type="button" data-dec="' + r.product.id + '">−</button>' +
+        '<input type="number" value="' + r.qty + '" min="1" max="20" data-qty-of="' + r.product.id + '">' +
+        '<button type="button" data-inc="' + r.product.id + '">+</button></div>' +
+        '<strong>' + S.price(r.total) + '</strong>' +
+        '</div>';
+    }).join('') + '</div>' +
+    '<div style="display:flex;justify-content:space-between;margin-top:1rem;flex-wrap:wrap;gap:.6rem">' +
+    '<a class="btn btn--ghost btn--sm" href="shop.html">ادامه خرید</a>' +
+    '<button class="btn btn--ghost btn--sm" data-clear>خالی کردن سبد</button></div>';
+
+    var sub = S.cartSubtotal();
+    var disc = Math.round(sub * discountRate());
+    var ship = S.shippingCost(sub - disc);
+    sum.innerHTML =
+      '<h3>خلاصه سفارش</h3>' +
+      '<div class="summary__row"><span>جمع کالاها</span><span>' + S.price(sub) + '</span></div>' +
+      (disc ? '<div class="summary__row" style="color:var(--ok)"><span>تخفیف (' + coupon + ')</span><span>−' + S.price(disc) + '</span></div>' : '') +
+      '<div class="summary__row"><span>هزینه ارسال</span><span>' + (ship ? S.price(ship) : 'رایگان') + '</span></div>' +
+      '<div class="coupon"><input placeholder="کد تخفیف" data-coupon value="' + coupon + '"><button class="btn btn--ghost btn--sm" data-apply>اعمال</button></div>' +
+      '<div class="summary__total"><span>مبلغ قابل پرداخت</span><span>' + S.price(sub - disc + ship) + '</span></div>' +
+      '<a class="btn btn--gold btn--block" style="margin-top:1rem" href="checkout.html">ادامه و تسویه حساب</a>' +
+      '<p class="muted" style="font-size:.8rem;margin-top:.8rem">کدهای فعال نمونه: ZAMANA10 و WATCH5</p>';
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.dataset.remove) S.removeFromCart(t.dataset.remove);
+    if (t.dataset.inc) S.setQty(t.dataset.inc, (+document.querySelector('[data-qty-of="' + t.dataset.inc + '"]').value) + 1);
+    if (t.dataset.dec) S.setQty(t.dataset.dec, (+document.querySelector('[data-qty-of="' + t.dataset.dec + '"]').value) - 1);
+    if (t.hasAttribute('data-clear')) { S.clearCart(); }
+    if (t.hasAttribute('data-apply')) {
+      var code = document.querySelector('[data-coupon]').value.trim().toUpperCase();
+      if (COUPONS[code]) { coupon = code; sessionStorage.setItem('zamana_coupon', code); S.toast('کد تخفیف اعمال شد'); }
+      else { coupon = ''; sessionStorage.removeItem('zamana_coupon'); S.toast('کد تخفیف معتبر نیست'); }
+      render();
+    }
+  });
+  document.addEventListener('change', function (e) {
+    if (e.target.dataset.qtyOf) S.setQty(e.target.dataset.qtyOf, +e.target.value);
+  });
+  document.addEventListener('cart:change', render);
+  render();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تسویه حساب | زمانا</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header data-site-header></header>
+
+<main class="container">
+  <nav class="crumbs"><a href="index.html">خانه</a> / <a href="cart.html">سبد خرید</a> / <span>تسویه حساب</span></nav>
+  <div data-checkout></div>
+</main>
+
+<footer class="footer" data-site-footer></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.Store;
+  var COUPONS = { ZAMANA10: 0.10, WATCH5: 0.05 };
+  var coupon = sessionStorage.getItem('zamana_coupon') || '';
+  var root = document.querySelector('[data-checkout]');
+
+  function renderForm() {
+    var rows = S.cartDetailed();
+    if (!rows.length) {
+      root.innerHTML = '<div class="empty" style="margin:2rem 0">سبد خرید خالی است.<br><br><a class="btn btn--primary" href="shop.html">رفتن به فروشگاه</a></div>';
+      return;
+    }
+    var sub = S.cartSubtotal();
+    var disc = Math.round(sub * (COUPONS[coupon] || 0));
+    var ship = S.shippingCost(sub - disc);
+    var total = sub - disc + ship;
+
+    root.innerHTML =
+      '<h1 style="font-size:1.6rem">تسویه حساب</h1>' +
+      '<div class="cart" style="margin:1.2rem 0 2rem">' +
+        '<form class="panel" id="orderForm" novalidate>' +
+          '<h3>اطلاعات گیرنده</h3>' +
+          '<div class="form-grid">' +
+            '<div class="field"><label for="fn">نام</label><input id="fn" required></div>' +
+            '<div class="field"><label for="ln">نام خانوادگی</label><input id="ln" required></div>' +
+            '<div class="field"><label for="ph">شماره موبایل</label><input id="ph" inputmode="numeric" placeholder="09xxxxxxxxx" required pattern="09[0-9]{9}"></div>' +
+            '<div class="field"><label for="em">ایمیل</label><input id="em" type="email" placeholder="you@mail.com"></div>' +
+            '<div class="field"><label for="ct">استان و شهر</label><input id="ct" required placeholder="تهران، تهران"></div>' +
+            '<div class="field"><label for="pc">کد پستی</label><input id="pc" inputmode="numeric" pattern="[0-9]{10}" required></div>' +
+            '<div class="field field--full"><label for="ad">نشانی کامل</label><textarea id="ad" rows="3" required></textarea></div>' +
+            '<div class="field field--full"><label for="nt">توضیحات سفارش (اختیاری)</label><textarea id="nt" rows="2"></textarea></div>' +
+          '</div>' +
+          '<h3 style="margin-top:1.6rem">روش پرداخت</h3>' +
+          '<div class="pay-options">' +
+            '<label><input type="radio" name="pay" value="online" checked><span>پرداخت آنلاین (درگاه امن بانکی)</span></label>' +
+            '<label><input type="radio" name="pay" value="cod"><span>پرداخت در محل هنگام تحویل</span></label>' +
+            '<label><input type="radio" name="pay" value="installment"><span>خرید اقساطی (اعتبارسنجی پس از ثبت)</span></label>' +
+          '</div>' +
+          '<p class="muted" style="font-size:.85rem;margin-top:1rem">این یک نسخه نمایشی است؛ هیچ پرداخت واقعی انجام نمی‌شود.</p>' +
+          '<button class="btn btn--gold btn--block" style="margin-top:1rem" type="submit">ثبت نهایی سفارش</button>' +
+        '</form>' +
+        '<aside class="summary">' +
+          '<h3>سفارش شما</h3>' +
+          rows.map(function (r) {
+            return '<div class="summary__row"><span>' + r.product.name + ' ×' + S.toFa(r.qty) + '</span><span>' + S.price(r.total) + '</span></div>';
+          }).join('') +
+          (disc ? '<div class="summary__row" style="color:var(--ok)"><span>تخفیف</span><span>−' + S.price(disc) + '</span></div>' : '') +
+          '<div class="summary__row"><span>ارسال</span><span>' + (ship ? S.price(ship) : 'رایگان') + '</span></div>' +
+          '<div class="summary__total"><span>قابل پرداخت</span><span>' + S.price(total) + '</span></div>' +
+        '</aside>' +
+      '</div>';
+
+    document.getElementById('orderForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var form = e.target;
+      if (!form.checkValidity()) { form.reportValidity(); S.toast('لطفاً فیلدهای الزامی را کامل کنید'); return; }
+      var code = 'ZM-' + Math.floor(100000 + Math.random() * 900000);
+      var name = document.getElementById('fn').value + ' ' + document.getElementById('ln').value;
+      S.clearCart();
+      sessionStorage.removeItem('zamana_coupon');
+      root.innerHTML =
+        '<div class="panel success" style="margin:2rem 0">' +
+        '<div class="success__mark">✓</div>' +
+        '<h1 style="font-size:1.5rem">سفارش شما ثبت شد</h1>' +
+        '<p class="muted">' + name + ' عزیز، سفارش شما با کد پیگیری <b>' + code + '</b> ثبت شد.<br>مبلغ قابل پرداخت: <b>' + S.price(total) + '</b></p>' +
+        '<p class="muted">کارشناسان ما تا حداکثر ۲ ساعت کاری برای تأیید نهایی با شما تماس می‌گیرند.</p>' +
+        '<a class="btn btn--primary" href="shop.html">بازگشت به فروشگاه</a></div>';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  renderForm();
+});
+</script>
+</body>
+</html>

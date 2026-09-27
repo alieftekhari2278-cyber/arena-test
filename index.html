@@ -1,65 +1,135 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>arena-test | بررسی هوش مصنوعی</title>
-    <meta
-      name="description"
-      content="در این پروژه هوش مصنوعی را بررسی می‌کنیم و پروژه‌های مختلف را با استانداردهای GitHub می‌سازیم."
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="site-header" aria-label="سربرگ سایت">
-      <a class="brand" href="#main-content">arena-test</a>
-      <nav class="nav" aria-label="ناوبری اصلی">
-        <a href="#mission">هدف</a>
-        <a href="#standards">استانداردها</a>
-        <a href="#roadmap">مسیر کار</a>
-      </nav>
-    </header>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>زمانا | فروشگاه تخصصی ساعت‌های اصل</title>
+<meta name="description" content="فروشگاه آنلاین زمانا؛ خرید ساعت مچی مردانه، زنانه، اسپرت و هوشمند با گارانتی اصالت، ارسال سریع و ۷ روز ضمانت بازگشت.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header data-site-header></header>
 
-    <main id="main-content" class="main">
-      <section class="hero" id="mission" aria-labelledby="mission-title">
-        <p class="eyebrow">پروژه بررسی هوش مصنوعی</p>
-        <h1 id="mission-title">اینجا هوش مصنوعی را واقعی، شفاف و مرحله‌به‌مرحله بررسی می‌کنیم.</h1>
-        <p class="lead">
-          در این پروژه قرار است این هوش مصنوعی را بررسی کنیم، توانایی‌ها و محدودیت‌هایش را
-          بدون اغراق ثبت کنیم و پروژه‌های مختلف را با استانداردهای GitHub بسازیم.
-        </p>
-        <a class="cta" href="#roadmap">دیدن مسیر کار</a>
-      </section>
+<main>
+  <section class="hero">
+    <div class="hero__bg"><img src="assets/img/hero.jpg" alt="ساعت لوکس زمانا"></div>
+    <div class="container">
+      <div class="hero__in">
+        <span class="hero__eyebrow">کالکشن پاییز ۱۴۰۴</span>
+        <h1>زمان را <span>با شکوه</span> در دست بگیرید</h1>
+        <p>بیش از ۴۰ برند معتبر جهانی، با ضمانت اصالت کالا، سرویس دوره‌ای رایگان و امکان پرداخت در محل. ساعتی که می‌خرید، داستانی است که سال‌ها همراه شماست.</p>
+        <div class="hero__cta">
+          <a class="btn btn--gold" href="shop.html">مشاهده فروشگاه</a>
+          <a class="btn btn--light" href="shop.html?cat=luxury">مجموعه لاکچری</a>
+        </div>
+        <div class="hero__stats">
+          <div><b>۱۲ سال</b><span>سابقه تخصصی</span></div>
+          <div><b>۴۰+</b><span>برند معتبر</span></div>
+          <div><b>۲۳٬۵۰۰</b><span>مشتری راضی</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <section class="cards" id="standards" aria-labelledby="standards-title">
-        <h2 id="standards-title">اصول کار در این مخزن</h2>
-        <article class="card">
-          <h3>شفافیت</h3>
-          <p>هر قابلیت، محدودیت و نتیجه تست باید مستند شود؛ بدون ادعای بی‌پشتوانه.</p>
-        </article>
-        <article class="card">
-          <h3>استانداردهای GitHub</h3>
-          <p>ساختار README، Pull Request، Issue و تغییرات پروژه باید قابل پیگیری و مرتب باشد.</p>
-        </article>
-        <article class="card">
-          <h3>پروژه‌های عملی</h3>
-          <p>برای سنجش واقعی، پروژه‌های کوچک و بزرگ ساخته می‌شوند و نتیجه آن‌ها بررسی می‌شود.</p>
-        </article>
-      </section>
+  <section class="section">
+    <div class="container">
+      <div class="features">
+        <div class="feature"><i>🛡️</i><div><b>ضمانت اصالت</b><small>مستقیم از نمایندگی رسمی</small></div></div>
+        <div class="feature"><i>🚚</i><div><b>ارسال سریع</b><small>تهران ۲۴ ساعته، شهرستان ۳ روزه</small></div></div>
+        <div class="feature"><i>↩️</i><div><b>۷ روز بازگشت</b><small>بدون قید و شرط</small></div></div>
+        <div class="feature"><i>🛠️</i><div><b>سرویس تخصصی</b><small>تعمیرگاه مجهز داخلی</small></div></div>
+      </div>
+    </div>
+  </section>
 
-      <section class="roadmap" id="roadmap" aria-labelledby="roadmap-title">
-        <h2 id="roadmap-title">مسیر پیشنهادی</h2>
-        <ol>
-          <li>تعریف دقیق مسئله و معیارهای موفقیت.</li>
-          <li>ساخت نسخه اولیه با کد تمیز و قابل بررسی.</li>
-          <li>ثبت تغییرات و بازبینی با Pull Request.</li>
-          <li>مستندسازی نتیجه‌ها، خطاها و محدودیت‌ها.</li>
-        </ol>
-      </section>
-    </main>
+  <section class="section section--soft">
+    <div class="container">
+      <div class="section__head">
+        <div><span class="kicker">منتخب سردبیر</span><h2>پرفروش‌ترین ساعت‌ها</h2><p>محبوب‌ترین مدل‌های این فصل بر اساس خرید مشتریان</p></div>
+        <a class="btn btn--ghost btn--sm" href="shop.html">همه محصولات ←</a>
+      </div>
+      <div class="grid" data-featured></div>
+    </div>
+  </section>
 
-    <footer class="site-footer">
-      <p>ساخته‌شده برای بررسی صادقانه هوش مصنوعی و ساخت پروژه‌های استاندارد در GitHub.</p>
-    </footer>
-  </body>
+  <section class="section">
+    <div class="container banners">
+      <a class="banner" href="shop.html?cat=men">
+        <img src="assets/img/banner-men.jpg" alt="کالکشن مردانه">
+        <div class="banner__in"><h3>کالکشن مردانه</h3><p>اقتدار در جزئیات؛ از کرونوگراف تا دایور</p><span class="btn btn--light btn--sm">مشاهده</span></div>
+      </a>
+      <a class="banner" href="shop.html?cat=women">
+        <img src="assets/img/p5.jpg" alt="کالکشن زنانه">
+        <div class="banner__in"><h3>کالکشن زنانه</h3><p>ظرافت و درخشش در طراحی‌های باریک</p><span class="btn btn--light btn--sm">مشاهده</span></div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="promo">
+        <div>
+          <span class="kicker">پیشنهاد شگفت‌انگیز</span>
+          <h2>تا ۲۵٪ تخفیف روی مجموعه هریتیج</h2>
+          <p class="muted" style="color:#b9c0cc">فرصت محدود؛ با کد تخفیف <b style="color:#e0c078">ZAMANA10</b> ۱۰٪ بیشتر صرفه‌جویی کنید.</p>
+        </div>
+        <div class="countdown" data-countdown>
+          <div><b data-cd="d">۰۲</b><span>روز</span></div>
+          <div><b data-cd="h">۱۲</b><span>ساعت</span></div>
+          <div><b data-cd="m">۳۰</b><span>دقیقه</span></div>
+          <div><b data-cd="s">۰۰</b><span>ثانیه</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="container">
+      <div class="section__head">
+        <div><span class="kicker">تازه‌ها</span><h2>جدیدترین محصولات</h2><p>آخرین مدل‌هایی که به مجموعه زمانا اضافه شدند</p></div>
+        <a class="btn btn--ghost btn--sm" href="shop.html">همه محصولات ←</a>
+      </div>
+      <div class="grid" data-newest></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section__head"><div><span class="kicker">تجربه مشتریان</span><h2>نظر خریداران زمانا</h2></div></div>
+      <div class="reviews">
+        <article class="review"><span class="stars">★★★★★</span><p>بسته‌بندی بی‌نظیر بود و ساعت دقیقاً مطابق تصاویر سایت. کارت گارانتی و فاکتور رسمی هم همراهش بود.</p><footer><span class="avatar">م</span><div><b>مهدی رضایی</b><br><small class="muted">خرید کرونوگراف نوبل</small></div></footer></article>
+        <article class="review"><span class="stars">★★★★★</span><p>پشتیبانی واقعاً حرفه‌ای است؛ برای تنظیم سایز بند راهنمایی کردند و رایگان انجام شد.</p><footer><span class="avatar">س</span><div><b>سارا موسوی</b><br><small class="muted">خرید لیدی پرل</small></div></footer></article>
+        <article class="review"><span class="stars">★★★★★</span><p>سفارشم را در کمتر از ۲۴ ساعت در تهران تحویل گرفتم. قیمت هم نسبت به بازار منصفانه بود.</p><footer><span class="avatar">ا</span><div><b>امیر کاظمی</b><br><small class="muted">خرید اسمارت‌واچ پرو ۲</small></div></footer></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" data-site-footer></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.Store, P = window.PRODUCTS;
+  var featured = P.slice().sort(function (a, b) { return b.reviews - a.reviews; }).slice(0, 4);
+  var newest = P.slice().reverse().slice(0, 4);
+  document.querySelector('[data-featured]').innerHTML = featured.map(S.productCard).join('');
+  document.querySelector('[data-newest]').innerHTML = newest.map(S.productCard).join('');
+
+  // شمارش معکوس تا پایان پیشنهاد (۲ روز و نیم از اکنون)
+  var end = Date.now() + (2 * 24 * 60 * 60 + 12 * 3600 + 1800) * 1000;
+  function tick() {
+    var diff = Math.max(0, end - Date.now()) / 1000 | 0;
+    var d = diff / 86400 | 0, h = (diff % 86400) / 3600 | 0, m = (diff % 3600) / 60 | 0, s = diff % 60;
+    var set = function (k, v) {
+      var n = document.querySelector('[data-cd="' + k + '"]');
+      if (n) n.textContent = S.toFa(v).padStart(2, '۰');
+    };
+    set('d', d); set('h', h); set('m', m); set('s', s);
+  }
+  tick(); setInterval(tick, 1000);
+});
+</script>
+</body>
 </html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>جزئیات محصول | زمانا</title>
+<meta name="description" content="مشخصات فنی، قیمت و خرید آنلاین ساعت با گارانتی اصالت از فروشگاه زمانا.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header data-site-header></header>
+
+<main class="container">
+  <nav class="crumbs"><a href="index.html">خانه</a> / <a href="shop.html">فروشگاه</a> / <span data-crumb></span></nav>
+  <div data-pdp></div>
+
+  <section class="section">
+    <div class="section__head"><div><span class="kicker">شاید بپسندید</span><h2>محصولات مرتبط</h2></div></div>
+    <div class="grid" data-related></div>
+  </section>
+</main>
+
+<footer class="footer" data-site-footer></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.Store, P = window.PRODUCTS;
+  var id = S.qs('id');
+  var p = P.filter(function (x) { return x.id === id; })[0] || P[0];
+  document.title = p.name + ' | زمانا';
+  document.querySelector('[data-crumb]').textContent = p.name;
+
+  var off = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+  var stockTxt = p.stock > 5
+    ? '<span class="stock-ok">موجود در انبار</span>'
+    : '<span class="stock-low">تنها ' + S.toFa(p.stock) + ' عدد باقی مانده</span>';
+
+  document.querySelector('[data-pdp]').innerHTML =
+    '<div class="pdp">' +
+      '<div>' +
+        '<div class="pdp__media"><img src="' + p.image + '" alt="' + p.name + '" id="mainImg"></div>' +
+        '<div class="pdp__thumbs">' +
+          [p.image, 'assets/img/hero.jpg', 'assets/img/banner-men.jpg'].map(function (src, i) {
+            return '<button type="button" class="' + (i === 0 ? 'is-active' : '') + '" data-thumb="' + src + '"><img src="' + src + '" alt="نمای ' + S.toFa(i + 1) + '"></button>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
+      '<div>' +
+        '<span class="card__brand">' + p.brand + '</span>' +
+        '<h1>' + p.name + '</h1>' +
+        '<div class="card__rate">' + S.stars(p.rating) + '<small>' + S.toFa(p.rating) + ' از ۵ · ' + S.toFa(p.reviews) + ' نظر</small></div>' +
+        '<div class="pdp__price"><strong>' + S.price(p.price) + '</strong>' +
+          (p.oldPrice ? '<del>' + S.toFa(p.oldPrice) + '</del><span class="chip chip--off" style="position:static">٪' + S.toFa(off) + '−</span>' : '') +
+        '</div>' +
+        '<p class="muted">' + p.desc + '</p>' +
+        '<table class="specs">' +
+          '<tr><td>نوع موتور</td><td>' + p.movement + '</td></tr>' +
+          '<tr><td>قطر قاب</td><td>' + p.caseSize + '</td></tr>' +
+          '<tr><td>مقاومت در برابر آب</td><td>' + p.water + '</td></tr>' +
+          '<tr><td>گارانتی</td><td>' + p.warranty + ' خدمات زمانا</td></tr>' +
+          '<tr><td>وضعیت موجودی</td><td>' + stockTxt + '</td></tr>' +
+        '</table>' +
+        '<div class="tags">' + p.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div>' +
+        '<div class="pdp__buy">' +
+          '<div class="qty"><button type="button" data-step="-1">−</button><input type="number" value="1" min="1" max="20" data-qty><button type="button" data-step="1">+</button></div>' +
+          '<button class="btn btn--primary" data-buy>افزودن به سبد خرید</button>' +
+          '<a class="btn btn--ghost" href="cart.html">مشاهده سبد</a>' +
+        '</div>' +
+        '<div class="features" style="grid-template-columns:1fr 1fr;margin-top:1.5rem">' +
+          '<div class="feature"><i>🛡️</i><div><b>اصالت تضمینی</b><small>هولوگرام و کارت گارانتی</small></div></div>' +
+          '<div class="feature"><i>💳</i><div><b>پرداخت امن</b><small>درگاه بانکی یا در محل</small></div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  var qty = document.querySelector('[data-qty]');
+  document.querySelectorAll('[data-step]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      qty.value = Math.max(1, Math.min(20, (+qty.value || 1) + (+b.dataset.step)));
+    });
+  });
+  document.querySelector('[data-buy]').addEventListener('click', function () {
+    S.addToCart(p.id, +qty.value || 1);
+  });
+  document.querySelectorAll('[data-thumb]').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.getElementById('mainImg').src = t.dataset.thumb;
+      document.querySelectorAll('[data-thumb]').forEach(function (x) { x.classList.remove('is-active'); });
+      t.classList.add('is-active');
+    });
+  });
+
+  var related = P.filter(function (x) { return x.id !== p.id && (x.category === p.category || x.brand === p.brand); }).slice(0, 4);
+  if (related.length < 4) related = related.concat(P.filter(function (x) { return x.id !== p.id && related.indexOf(x) === -1; })).slice(0, 4);
+  document.querySelector('[data-related]').innerHTML = related.map(S.productCard).join('');
+});
+</script>
+</body>
+</html>

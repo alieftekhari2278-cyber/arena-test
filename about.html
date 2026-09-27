@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>درباره زمانا | فروشگاه ساعت</title>
+<meta name="description" content="درباره فروشگاه ساعت زمانا، گارانتی اصالت، شرایط ارسال و مرجوعی و راه‌های تماس.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header data-site-header></header>
+
+<main>
+  <section class="about-hero">
+    <div class="container">
+      <span class="kicker">درباره ما</span>
+      <h1 style="font-size:clamp(1.6rem,3vw,2.4rem)">۱۲ سال در کنار دوستداران ساعت</h1>
+      <p class="muted" style="max-width:48rem">زمانا از سال ۱۳۹۲ فعالیت خود را با یک ویترین کوچک آغاز کرد و امروز یکی از مراجع تخصصی فروش ساعت در ایران است. تمرکز ما بر سه اصل است: اصالت کالا، قیمت منصفانه و خدمات پس از فروش واقعی.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container about-grid">
+      <img src="assets/img/hero.jpg" alt="کارگاه زمانا">
+      <div>
+        <span class="kicker">کارگاه تخصصی</span>
+        <h2>هر ساعت پیش از ارسال بررسی می‌شود</h2>
+        <p class="muted">تیم فنی ما دقت زمان‌سنجی، آب‌بندی و سلامت موتور هر ساعت را در کارگاه کنترل می‌کند. سرویس دوره‌ای اول برای همه مشتریان رایگان است و قطعات یدکی اصلی از نمایندگی‌های رسمی تأمین می‌شود.</p>
+        <div class="features" style="grid-template-columns:1fr 1fr;margin-top:1rem">
+          <div class="feature"><i>🔍</i><div><b>کنترل کیفیت</b><small>۱۲ مرحله بازرسی</small></div></div>
+          <div class="feature"><i>⌚</i><div><b>تنظیم رایگان بند</b><small>در محل فروشگاه</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft" id="faq">
+    <div class="container">
+      <div class="section__head"><div><span class="kicker">راهنما</span><h2>پرسش‌های متداول</h2></div></div>
+      <div class="faq">
+        <details id="warranty" open><summary>گارانتی و اصالت کالا چگونه تضمین می‌شود؟</summary><p>همه محصولات با کارت گارانتی معتبر، هولوگرام اصالت و فاکتور رسمی ارسال می‌شوند. در صورت اثبات غیر اصل بودن، مبلغ سه‌برابر بازگردانده می‌شود.</p></details>
+        <details id="shipping"><summary>ارسال و مرجوعی چطور انجام می‌شود؟</summary><p>ارسال در تهران ۲۴ ساعته و در شهرستان‌ها ۲ تا ۳ روز کاری است. خریدهای بالای ۳۰ میلیون تومان ارسال رایگان دارند و تا ۷ روز امکان بازگشت کالای سالم وجود دارد.</p></details>
+        <details><summary>آیا امکان خرید اقساطی وجود دارد؟</summary><p>بله، برای سفارش‌های بالای ۲۰ میلیون تومان امکان پرداخت اقساطی ۴ تا ۱۲ ماهه پس از اعتبارسنجی فراهم است.</p></details>
+        <details><summary>سرویس دوره‌ای ساعت چند وقت یک‌بار لازم است؟</summary><p>برای ساعت‌های مکانیکی هر ۳ تا ۴ سال و برای ساعت‌های کوارتز هنگام تعویض باتری، بررسی واشرهای آب‌بندی توصیه می‌شود.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="container about-grid">
+      <div>
+        <span class="kicker">تماس با ما</span>
+        <h2>در خدمت شما هستیم</h2>
+        <p class="muted">نشانی: تهران، خیابان ولیعصر، مرکز خرید زمانا، طبقه دوم، پلاک ۲۱۴<br>تلفن: ۰۲۱-۹۱۰۰۰۰۰۰<br>ایمیل: support@zamana.example<br>ساعات کاری: شنبه تا پنجشنبه، ۱۰ تا ۲۰</p>
+      </div>
+      <form class="panel" data-contact>
+        <h3>ارسال پیام</h3>
+        <div class="form-grid">
+          <div class="field"><label for="cn">نام شما</label><input id="cn" required></div>
+          <div class="field"><label for="cp">شماره تماس</label><input id="cp" required></div>
+          <div class="field field--full"><label for="cm">پیام</label><textarea id="cm" rows="4" required></textarea></div>
+        </div>
+        <button class="btn btn--primary btn--block" style="margin-top:1rem" type="submit">ارسال پیام</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" data-site-footer></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelector('[data-contact]').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+    e.target.reset();
+    window.Store.toast('پیام شما ثبت شد؛ به‌زودی تماس می‌گیریم');
+  });
+});
+</script>
+</body>
+</html>
