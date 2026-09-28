@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>گیاهان در برابر زامبی‌ها | بازی مرورگری</title>
+    <meta
+      name="description"
+      content="نسخه‌ی مرورگری بازی گیاهان در برابر زامبی‌ها؛ ساخته‌شده با HTML، CSS و JavaScript خالص بدون هیچ وابستگی خارجی."
+    />
+    <meta name="theme-color" content="#14301a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌻</text></svg>"
+    />
+  </head>
+  <body>
+    <div class="game-shell" id="app">
+      <header class="topbar">
+        <h1 class="logo"><span class="logo-plant">🌻</span> گیاهان در برابر زامبی‌ها <span class="logo-zombie">🧟</span></h1>
+        <div class="topbar-actions">
+          <button id="mute-btn" class="icon-btn" type="button" aria-label="خاموش کردن صدا">🔊</button>
+          <button id="pause-btn" class="icon-btn" type="button" aria-label="توقف بازی">⏸</button>
+          <button id="menu-btn" class="icon-btn" type="button" aria-label="منوی اصلی">☰</button>
+        </div>
+      </header>
+
+      <div id="hud" class="hud is-hidden">
+        <div class="sun-box" title="خورشید موجود">
+          <span class="sun-icon" aria-hidden="true"></span>
+          <strong id="sun-count">۵۰</strong>
+        </div>
+        <div id="seed-bar" class="seed-bar" role="toolbar" aria-label="کارت‌های بذر"></div>
+        <button id="shovel-btn" class="tool-btn" type="button" aria-label="بیل برای برداشتن گیاه">
+          <span aria-hidden="true">🪏</span>
+          <small>بیل</small>
+        </button>
+      </div>
+
+      <div class="stage">
+        <canvas id="lawn" width="892" height="518" aria-label="زمین بازی"></canvas>
+        <div id="overlay" class="overlay" hidden></div>
+        <div id="toast" class="toast"></div>
+      </div>
+
+      <div class="wavebar">
+        <span id="level-name" class="level-name">آماده‌ای؟</span>
+        <div class="wave-track" role="progressbar" aria-label="پیشرفت موج‌ها">
+          <div id="wave-fill" class="wave-fill"></div>
+          <span class="wave-flag" aria-hidden="true">🚩</span>
+        </div>
+        <span id="wave-label" class="wave-label">موج ۰</span>
+      </div>
+
+      <footer class="credits">
+        <p>
+          ساخته‌شده با HTML، CSS و JavaScript خالص — بدون کتابخانه‌ی خارجی. همه‌ی گرافیک‌ها و صداها
+          در زمان اجرا تولید می‌شوند.
+        </p>
+        <p class="muted">
+          پروژه‌ای آموزشی و غیرتجاری با الهام از بازی Plants vs. Zombies ساخته‌ی PopCap Games.
+        </p>
+      </footer>
+    </div>
+
+    <noscript>
+      <p style="text-align: center; padding: 2rem">برای اجرای این بازی باید JavaScript فعال باشد.</p>
+    </noscript>
+
+    <script type="module">
+      import { Game } from './js/game.js';
+      new Game(document.getElementById('app'));
+    </script>
+  </body>
+</html>

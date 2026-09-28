@@ -1,0 +1,16 @@
+{
+  "name": "arena-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "مخزن آزمایشی؛ شامل بازی مرورگری «گیاهان در برابر زامبی‌ها» با JavaScript خالص.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "test": "node game/test/smoke.mjs",
+    "balance": "node game/test/balance.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

@@ -199,3 +199,49 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+/* ------------------------- پروژه‌ی شاخص (بازی) ------------------------- */
+
+.project-highlight {
+  margin: 2rem 0;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border-radius: 20px;
+  color: #f2fbee;
+  background:
+    radial-gradient(600px 240px at 90% -20%, rgba(255, 210, 58, 0.22), transparent 70%),
+    linear-gradient(140deg, #1c4a22 0%, #143a1b 60%, #0f2a14 100%);
+  border: 1px solid rgba(143, 212, 92, 0.32);
+  box-shadow: 0 24px 50px rgba(12, 40, 16, 0.32);
+}
+
+.project-highlight h2 {
+  margin: 0.25rem 0 0.75rem;
+  font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+}
+
+.project-highlight .eyebrow {
+  color: #ffd23a;
+}
+
+.project-highlight p {
+  margin: 0 0 0.75rem;
+  color: #d5ecca;
+}
+
+.project-highlight .hint {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.project-highlight code {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.85em;
+}
+
+.project-highlight .cta {
+  background: linear-gradient(180deg, #8fd45c, #4f9b2e);
+  color: #08210a;
+  box-shadow: 0 5px 0 #2f6b1c;
+}
