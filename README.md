@@ -35,6 +35,22 @@ npm run balance  # گزارش منحنی سختی مراحل
 - `README.md`: معرفی و مستندات پایه پروژه
 - `pvz/`: تحقیق درباره بازی «گیاهان در برابر زامبی‌ها» به همراه گالری تصاویر
   ([مستند متنی](pvz/README.md) · [صفحه وب](pvz/index.html))
+- `pvz-game/`: بازی کامل و قابل بازیِ «گیاهان در برابر زامبی‌ها» با HTML5 Canvas
+  ([راهنما](pvz-game/README.md) · [اجرا](pvz-game/index.html))
+
+## اجرای بازی
+
+```bash
+cd pvz-game
+python3 -m http.server 8080
+```
+
+سپس <http://localhost:8080> را باز کنید. تست‌های بی‌مرورگر:
+
+```bash
+node pvz-game/tests/smoke.test.mjs
+node pvz-game/tests/balance.test.mjs
+```
 
 ## اجرای محلی
 

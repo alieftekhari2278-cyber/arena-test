@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>گیاهان در برابر زامبی‌ها — بازی</title>
+    <meta name="description" content="نسخه‌ی بازسازی‌شده‌ی بازی برج‌دفاعی گیاهان در برابر زامبی‌ها با HTML5 Canvas." />
+    <meta name="theme-color" content="#1b4332" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌻</text></svg>" />
+  </head>
+  <body>
+    <div class="fit" id="fit">
+      <div class="stage" id="stage">
+        <!-- نوار بالا -->
+        <header class="topbar" id="topbar">
+          <div class="sunmeter" title="آفتاب موجود">
+            <canvas class="sun-icon" width="44" height="44" aria-hidden="true"></canvas>
+            <span id="sunCount">0</span>
+          </div>
+
+          <div class="seedbar" id="seedbar" role="toolbar" aria-label="بسته‌های بذر"></div>
+
+          <button class="tool" id="shovelBtn" title="بیل — حذف گیاه (کلید S)" aria-label="بیل">
+            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+              <path d="M12 2v7M9 9h6l-1 4H10L9 9Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M10 13v4a2 2 0 0 0 4 0v-4" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <div class="progress" id="progressWrap" title="پیشرفت موج‌ها">
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+              <div class="progress-head" id="progressHead">🧟</div>
+            </div>
+            <span class="progress-label" id="progressLabel">موج ۰</span>
+          </div>
+
+          <button class="tool" id="pauseBtn" title="توقف (Esc)" aria-label="توقف">
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+              <rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/>
+              <rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/>
+            </svg>
+          </button>
+        </header>
+
+        <!-- زمین بازی -->
+        <canvas id="game" width="1000" height="600" aria-label="زمین بازی"></canvas>
+
+        <!-- ===================== صفحه‌ها ===================== -->
+
+        <!-- منوی اصلی -->
+        <section class="screen show" id="screenMenu">
+          <div class="menu-art" aria-hidden="true">
+            <canvas id="menuArt" width="1000" height="300"></canvas>
+          </div>
+          <div class="panel menu-panel">
+            <h1 class="title">
+              <span class="t-green">گیاهان</span>
+              <span class="t-vs">در برابر</span>
+              <span class="t-grey">زامبی‌ها</span>
+            </h1>
+            <p class="subtitle">یک بازی برج‌دفاعی · ساخته‌شده با HTML5 Canvas</p>
+            <div class="btnrow">
+              <button class="btn primary big" data-go="levels">شروع بازی</button>
+              <button class="btn" data-go="help">راهنما</button>
+            </div>
+            <p class="best" id="bestLine"></p>
+          </div>
+        </section>
+
+        <!-- انتخاب مرحله -->
+        <section class="screen" id="screenLevels">
+          <div class="panel wide">
+            <h2>انتخاب مرحله</h2>
+            <div class="levels" id="levelList"></div>
+            <div class="btnrow">
+              <button class="btn ghost" data-go="menu">بازگشت</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- انتخاب بذرها -->
+        <section class="screen" id="screenSeeds">
+          <div class="panel wide">
+            <h2 id="seedTitle">بذرهایت را انتخاب کن</h2>
+            <p class="hint" id="seedHint"></p>
+            <div class="seedpick" id="seedPick"></div>
+            <div class="chosen" id="chosenRow"></div>
+            <div class="btnrow">
+              <button class="btn ghost" data-go="levels">بازگشت</button>
+              <button class="btn" id="autoPick">انتخاب خودکار</button>
+              <button class="btn primary big" id="startBtn" disabled>بزن بریم!</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- راهنما -->
+        <section class="screen" id="screenHelp">
+          <div class="panel wide">
+            <h2>راهنمای بازی</h2>
+            <div class="help-grid">
+              <div>
+                <h3>هدف</h3>
+                <p>نگذار حتی یک زامبی به خانه‌ات برسد. هر ردیف یک چمن‌زن اضطراری دارد که فقط <strong>یک بار</strong> کار می‌کند.</p>
+                <h3>آفتاب</h3>
+                <p>روی گوی‌های آفتاب کلیک کن تا جمعشان کنی. با آفتاب گیاه می‌کاری. <strong>آفتابگردان</strong> منبع اصلی درآمد توست — اول چند تا بکار.</p>
+                <h3>کاشتن</h3>
+                <p>روی بسته‌ی بذر کلیک کن، بعد روی خانه‌ی خالی چمن. با <strong>بیل</strong> می‌توانی گیاه را برداری.</p>
+              </div>
+              <div>
+                <h3>کلیدهای میان‌بر</h3>
+                <ul class="keys">
+                  <li><kbd>۱</kbd>…<kbd>۹</kbd> انتخاب بذر</li>
+                  <li><kbd>S</kbd> بیل</li>
+                  <li><kbd>Esc</kbd> لغو انتخاب / توقف</li>
+                  <li><kbd>Space</kbd> توقف و ادامه</li>
+                  <li>کلیک راست: لغو انتخاب</li>
+                </ul>
+                <h3>نکته‌های تاکتیکی</h3>
+                <ul class="keys">
+                  <li>گردوی دیواری را جلوی نخودپاش‌ها بگذار.</li>
+                  <li>نخود برفی زامبی‌ها را کند می‌کند — با فوتبالیست‌ها عالی است.</li>
+                  <li>سیب‌زمینی‌مین ارزان است ولی زمان مسلح‌شدن دارد.</li>
+                  <li>بمب گیلاسی را برای موج‌های سنگین نگه دار.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="btnrow">
+              <button class="btn ghost" data-go="menu">بازگشت</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- توقف -->
+        <section class="screen" id="screenPause">
+          <div class="panel">
+            <h2>بازی متوقف شد</h2>
+            <div class="toggles">
+              <label class="switch"><input type="checkbox" id="sfxToggle" checked /><span>افکت صوتی</span></label>
+              <label class="switch"><input type="checkbox" id="musicToggle" checked /><span>موسیقی</span></label>
+            </div>
+            <div class="btnrow col">
+              <button class="btn primary big" id="resumeBtn">ادامه بازی</button>
+              <button class="btn" id="restartBtn">شروع دوباره</button>
+              <button class="btn ghost" id="quitBtn">منوی اصلی</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- نتیجه -->
+        <section class="screen" id="screenResult">
+          <div class="panel">
+            <h2 id="resultTitle">پیروزی!</h2>
+            <p class="result-sub" id="resultSub"></p>
+            <div class="stats" id="resultStats"></div>
+            <div class="btnrow col">
+              <button class="btn primary big" id="nextBtn">مرحله بعد</button>
+              <button class="btn" id="againBtn">دوباره</button>
+              <button class="btn ghost" id="homeBtn">منوی اصلی</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <p class="rotate-hint">برای تجربه بهتر گوشی را افقی بگیرید 🔄</p>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
