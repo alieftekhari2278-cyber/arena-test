@@ -1,24 +1,37 @@
-# Operating system files
+# Unity generated folders and files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+MemoryCaptures/
+Recordings/
+
+# Unity generated IDE/project files
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+
+# Crash reports and profiler captures
+sysinfo.txt
+*.stacktrace
+
+# OS files
 .DS_Store
 Thumbs.db
 
-# Editor and IDE settings
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs
-*.log
-
-# Environment files
+# Existing web-project ignores
+node_modules/
+dist/
+coverage/
+.cache/
 .env
 .env.*
 !.env.example
-
-# Dependency directories and build outputs
-node_modules/
-dist/
-build/
-coverage/
-.cache/

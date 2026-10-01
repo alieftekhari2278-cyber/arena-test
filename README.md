@@ -1,34 +1,39 @@
-# arena-test
+# Tactical FPS Prototype
 
-یک پروژه ساده برای بررسی صادقانه هوش مصنوعی و ساخت پروژه‌های مختلف با استانداردهای GitHub.
+An original Unity 2022.3 LTS tactical first-person shooter vertical-slice foundation. The working fiction uses placeholder factions and geometry only; no existing game's names, maps, weapons, logos, or audio are used.
 
-## بخش اصلی پروژه
+## Current status
 
-در این پروژه قرار است این هوش مصنوعی را بررسی کنیم، توانایی‌ها و محدودیت‌هایش را بدون اغراق ثبت کنیم و پروژه‌های مختلف را با استانداردهای GitHub بسازیم.
+- **Milestone 0 complete:** Unity project structure, Input System package, assembly definition, session bootstrap, ScriptableObject tuning assets, materials, prefab, and test scene.
+- **Milestone 1 complete:** precise first-person movement, mouse/gamepad look, sprint, walk, crouch, jump, gravity, ground detection, capsule clearance, camera FOV response, and optional camera bob.
+- **Not yet included:** weapons, combat, rounds, economy, objectives, bots, or HUD. Those belong to Milestones 2–7.
 
-## فایل‌ها
+## Open the prototype
 
-- `index.html`: صفحه اصلی با ساختار معنایی و بخش `<main>`
-- `styles.css`: استایل صفحه اصلی
-- `README.md`: معرفی و مستندات پایه پروژه
-
-## اجرای محلی
-
-برای دیدن صفحه، فایل `index.html` را در مرورگر باز کنید یا یک سرور ساده اجرا کنید:
-
-```bash
-python3 -m http.server 8000
-```
-
-سپس به آدرس زیر بروید:
+Open the repository root in Unity Hub using Unity 2022.3 LTS, then open:
 
 ```text
-http://localhost:8000
+Assets/_Project/Scenes/Milestone1_TestScene.unity
 ```
 
-## استانداردهای کاری پیشنهادی
+Press Play. Controls:
 
-- هر تغییر با توضیح روشن در Pull Request ثبت شود.
-- Issueها برای باگ، پیشنهاد و تسک‌های جدید استفاده شوند.
-- نتیجه تست‌ها، محدودیت‌ها و تصمیم‌های مهم در مستندات نوشته شوند.
-- از اغراق و ادعای بدون شواهد درباره توانایی‌های هوش مصنوعی پرهیز شود.
+| Action | Binding |
+| --- | --- |
+| Move | WASD |
+| Look | Mouse |
+| Sprint | Hold Left Shift while moving forward |
+| Walk | Hold Left Alt |
+| Crouch | Hold Left Ctrl |
+| Jump | Space |
+| Release/lock cursor | Escape / Left mouse button |
+
+The project uses the new Input System only. No legacy `UnityEngine.Input` calls are present in the runtime code.
+
+## Documentation
+
+See [`Documentation/Milestone0-1.md`](Documentation/Milestone0-1.md) for assumptions, setup steps, the scene hierarchy, input action map, code responsibilities, and the Play Mode checklist.
+
+## Repository note
+
+The repository originally contained a small Persian-language web scaffold (`index.html` and `styles.css`). Those files remain for history and are unrelated to the Unity build. Unity source lives under `Assets/`, `Packages/`, and `ProjectSettings/`.

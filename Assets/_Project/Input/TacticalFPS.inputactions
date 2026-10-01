@@ -1,0 +1,251 @@
+{
+  "name": "TacticalFPS",
+  "maps": [
+    {
+      "name": "Gameplay",
+      "id": "2a3d8a99-5e19-4d91-8f07-415f7af42f7b",
+      "actions": [
+        {
+          "name": "Move",
+          "type": "Value",
+          "id": "4a02db09-5c05-4d7d-85b0-1c267a2e9af2",
+          "expectedControlType": "Vector2",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true
+        },
+        {
+          "name": "Look",
+          "type": "Value",
+          "id": "a4a52d0f-174a-455c-8f2e-f7c36cda4900",
+          "expectedControlType": "Vector2",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true
+        },
+        {
+          "name": "Jump",
+          "type": "Button",
+          "id": "7f7ba5b2-1af2-4a8a-bd70-3a20a33df2c5",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        },
+        {
+          "name": "Sprint",
+          "type": "Button",
+          "id": "b227bbda-45d3-4d40-b773-37cded3cf6f6",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true
+        },
+        {
+          "name": "Walk",
+          "type": "Button",
+          "id": "7e7e7e1c-5da2-4adc-99de-7ca33cc9b3bd",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true
+        },
+        {
+          "name": "Crouch",
+          "type": "Button",
+          "id": "f9e0a8ad-8d4d-4f86-9f34-dde31f1c0ff5",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true
+        },
+        {
+          "name": "ToggleCursor",
+          "type": "Button",
+          "id": "d3cb0bba-cb7d-4380-9ad2-e0bca38e80c0",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        },
+        {
+          "name": "LockCursor",
+          "type": "Button",
+          "id": "b6500032-4a69-4579-97ba-40fe25504f0a",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        }
+      ],
+      "bindings": [
+        {
+          "name": "WASD",
+          "id": "6b5f2a05-fac6-49dc-bf93-0e44d970214f",
+          "path": "2DVector",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": true,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "up",
+          "id": "d3f1c14c-2be9-49fb-91cc-9b4e8087ad00",
+          "path": "<Keyboard>/w",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "down",
+          "id": "239bcbf1-22ff-4f4e-a6f9-feb4fc970f27",
+          "path": "<Keyboard>/s",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "left",
+          "id": "dc2ce9f6-21a9-4ce6-8acd-c5e73b1de890",
+          "path": "<Keyboard>/a",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "right",
+          "id": "2c23ad1b-0d55-46f9-af5b-960e6fc39c25",
+          "path": "<Keyboard>/d",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "Gamepad stick",
+          "id": "274346d2-8f2c-4664-a7a3-2d5504ed3cd3",
+          "path": "<Gamepad>/leftStick",
+          "interactions": "",
+          "processors": "StickDeadzone",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Mouse",
+          "id": "3c5480ec-97d9-4b78-a2c4-d3bf2f1b51f7",
+          "path": "<Mouse>/delta",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Look",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Gamepad stick",
+          "id": "cfce93da-6c56-47ff-94e0-1e4d48a3bb4c",
+          "path": "<Gamepad>/rightStick",
+          "interactions": "",
+          "processors": "StickDeadzone",
+          "groups": "",
+          "action": "Look",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Space",
+          "id": "8f74a7e8-67df-4d14-aec3-68b8dd4ad490",
+          "path": "<Keyboard>/space",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Jump",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Gamepad south",
+          "id": "d2412c58-5fbb-4a1c-8cd4-105518302cca",
+          "path": "<Gamepad>/buttonSouth",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Jump",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Left shift",
+          "id": "7fa61c5b-cf7b-4018-9e89-b8e5d5e7e41e",
+          "path": "<Keyboard>/leftShift",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Sprint",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Left alt",
+          "id": "e3183d60-9ae2-4fa9-9c7e-62c54231b8a4",
+          "path": "<Keyboard>/leftAlt",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Walk",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Left control",
+          "id": "e2eb0c3b-2b9b-4bb6-9a9c-d77fb4e39d42",
+          "path": "<Keyboard>/leftCtrl",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Crouch",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Escape",
+          "id": "ec92b697-37bd-4eb6-b8cb-4db21dab39e1",
+          "path": "<Keyboard>/escape",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "ToggleCursor",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "Left mouse button",
+          "id": "eb3e5d13-e14c-4e1a-a6c2-4cbf87bdeeed",
+          "path": "<Mouse>/leftButton",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "LockCursor",
+          "isComposite": false,
+          "isPartOfComposite": false
+        }
+     ]
+    }
+  ],
+  "controlSchemes": []
+}
